@@ -1,0 +1,26 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/forum/index",
+    "pages/forum/show",
+    "pages/forum/add",
+    "pages/forum/edit",
+    "pages/forum_group/index",
+    "pages/user/index",
+    "pages/user/set",
+    "pages/user/info",
+    "pages/user/user_head",
+    "pages/user/password",
+    "pages/register/index",
+    "pages/login/index",
+    "pages/notice/my",
+    "pages/comment/my",
+    "pages/fav/my"
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "微站云",
+    "navigationBarBackgroundColor": "#0faeff",
+    "backgroundColor": "#fbf9fe"
+  }
+}

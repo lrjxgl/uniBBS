@@ -1,0 +1,13 @@
+<template name="info$1d93947c">
+  <view class="_view data-v-7be2b2de">
+    <view wx:if="{{pageLoad}}" class="_view data-v-7be2b2de">
+      <form bindsubmit="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}" class="_form data-v-7be2b2de">
+        <view class="_view data-v-7be2b2de input-flex">
+          <view class="_view data-v-7be2b2de input-flex-label">昵称</view>
+          <input class="_input data-v-7be2b2de input-flex-text" name="nickname" value="{{pageData.data.nickname}}" />
+        </view>
+        <button type="submit" class="_button data-v-7be2b2de btn-row-submit"></button>
+      </form>
+    </view>
+  </view>
+</template>

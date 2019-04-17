@@ -1,0 +1,45 @@
+
+.mfooter-row {
+  height: 120rpx;
+}
+.mfooter {
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #ed6d53;
+  height: 120rpx;
+  align-items: center;
+  z-index: 99;
+}
+.mfooter-item {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  color: #e0e0e0;
+  font-size: 36rpx;
+  cursor: pointer;
+  display: block;
+  position: relative;
+}
+.mfooter-add {
+  position: absolute;
+  width: 80rpx;
+  height: 80rpx;
+  top: -56rpx;
+  left: 50%;
+  margin-left: -40rpx;
+  z-index: 99;
+}
+.mfooter-icon {
+  display: block;
+  color: #e0e0e0;
+  height: 35rpx;
+  font-size: 35rpx;
+}
+.mfooter-active {
+  color: #eee;
+  background-color: #ED5953;
+}

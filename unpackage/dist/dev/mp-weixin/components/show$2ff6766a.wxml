@@ -1,0 +1,18 @@
+<template name="show$2ff6766a">
+  <view class="_view data-v-986556c8">
+    <view wx:if="{{pageLoad}}" class="_view data-v-986556c8">
+      <view class="_view data-v-986556c8 flex">
+        <image src="{{data.user_head}}" class="_image data-v-986556c8 wh-100"></image>
+        <view class="_view data-v-986556c8 flex">
+          <view class="_view data-v-986556c8 f16">{{data.nickname}}</view>
+          <view class="_view data-v-986556c8 flex-1"></view>
+          <view class="_view data-v-986556c8 mgr-10 btn btn-danger">关注</view>
+        </view>
+      </view>
+      <view class="_view data-v-986556c8 d-title">{{pageData.data.title}}</view>
+      <view class="_view data-v-986556c8 d-content">
+        <rich-text type="text" nodes="{{pageData.data.content}}" class="_rich-text data-v-986556c8"></rich-text>
+      </view>
+    </view>
+  </view>
+</template>

@@ -1,0 +1,23 @@
+<import src="footer$aacb6d54" />
+<template name="index$6748d074">
+  <view class="_view data-v-d1bbbd7a">
+    <view wx:if="{{pageLoad}}" class="_view data-v-d1bbbd7a">
+      <view class="_view data-v-d1bbbd7a grouplist">
+        <view bindtap="handleProxy" class="_view data-v-d1bbbd7a grouplist-item" wx:key="index" key="{{index}}" data-eventid="{{'0-'+index}}" data-comkey="{{$k}}" wx:for="{{pageData.data}}" wx:for-index="index" wx:for-item="$c">
+          <view class="_view data-v-d1bbbd7a grouplist-img" url="{{'/pages/forum/list?gid='+$c.gid}}">
+            <image class="_img data-v-d1bbbd7a grouplist-img-img" mode="widthFix" src="{{$c.imgurl+'.100x100.jpg'}}"></image>
+          </view>
+          <view class="_view data-v-d1bbbd7a flex-1 ">
+            <view class="_view data-v-d1bbbd7a grouplist-title ">{{$c.title}}</view>
+            <view class="_view data-v-d1bbbd7a grouplist-stats"> 主题数
+              <label class="_span data-v-d1bbbd7a cor-num mgr-5">{{$c.topic_num}}</label> 评论数
+              <label class="_span data-v-d1bbbd7a cor-num">{{$c.comment_num}}</label>
+            </view>
+            <view class="_view data-v-d1bbbd7a grouplist-desc">{{$c.description}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <template tab="category" data="{{...$root[$kk+'0'], $root}}" is="footer$aacb6d54"></template>
+  </view>
+</template>

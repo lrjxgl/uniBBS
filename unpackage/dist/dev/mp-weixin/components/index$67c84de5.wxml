@@ -1,0 +1,51 @@
+<import src="footer$aacb6d54" />
+<template name="index$67c84de5">
+  <view class="_view data-v-1511b834 flex-1" wx:if="{{pageLoad}}">
+    <view class="_view data-v-1511b834 search-header">
+      <image class="_image data-v-1511b834 search-header-logo" src="https://deitui-weizhan1.oss-cn-hangzhou.aliyuncs.com/attach/2018/07/06/94385ce66afa493729176ced1540f84e.png"></image>
+      <form action="/shop.php?m=forum&a=search" class="_form data-v-1511b834 flex-1">
+        <view class="_view data-v-1511b834 none">
+          <input type="text" name="m" value="forum" class="_input data-v-1511b834" />
+          <input type="text" name="a" value="search" class="_input data-v-1511b834" />
+        </view>
+        <input type="text" name="keyword" class="_input data-v-1511b834 search-header-text  " />
+      </form>
+      <view class="_view data-v-1511b834 mgr-5"></view>
+    </view>
+    <swiper indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" duration="{{1000}}" class="_swiper data-v-1511b834">
+      <swiper-item wx:key="key" key="{{key}}" wx:for="{{pageData.flashlist}}" wx:for-index="key" wx:for-item="item" class="_swiper-item data-v-1511b834">
+        <view class="_view data-v-1511b834 swiper-item">
+          <image src="{{item.imgurl}}" style="width:100%" mode="widthFix" class="_image data-v-1511b834"></image>
+        </view>
+      </swiper-item>
+    </swiper>
+    <view class="_view data-v-1511b834 flist">
+      <view bindtap="handleProxy" class="_view data-v-1511b834 flist-item" wx:key="fkey" key="{{fkey}}" data-eventid="{{'0-'+fkey}}" data-comkey="{{$k}}" wx:for="{{pageData.forumlist}}" wx:for-index="fkey" wx:for-item="item">
+        <view class="_view data-v-1511b834 flist-user">
+          <image src="{{item.user_head+'.100x100.jpg'}}" class="_image data-v-1511b834 flist-user-head"></image>
+          <view class="_view data-v-1511b834 flex-1">
+            <view class="_view data-v-1511b834 flist-nick">{{item.nickname}}</view>
+            <view class="_view data-v-1511b834 flist-time">{{item.timeago}}</view>
+          </view>
+        </view>
+        <view class="_view data-v-1511b834 flist-title">{{item.title}}</view>
+        <view class="_view data-v-1511b834 flist-vd" wx:if="{{item.videourl}}">
+          <image class="_image data-v-1511b834 flist-vd-bg" src="../../static/img/0.jpg"></image>
+          <view class="_div data-v-1511b834 flist-vd-play"></view>
+        </view>
+        <view class="_view data-v-1511b834 flist-vd" wx:elif="{{item.imgurl}}">
+          <image class="_image data-v-1511b834 flist-vd-bg" src="{{item.imgurl+'.middle.jpg'}}" mode="widthFix"></image>
+        </view>
+        <view class="_view data-v-1511b834 flist-imgs" wx:if="{{item.imgslist}}">
+          <image wx:key="imgIndex" key="{{imgIndex}}" src="{{$img+'.100x100.jpg'}}" class="_image data-v-1511b834 flist-imgs-img" mode="widthFix" wx:for="{{item.imgslist}}" wx:for-index="imgIndex" wx:for-item="img"></image>
+        </view>
+        <view class="_view data-v-1511b834 flex flist-ft">
+          <view class="_view data-v-1511b834 flist-ft-love"> {{item.love_num}} </view>
+          <view class="_view data-v-1511b834 flist-ft-cm"> {{item.comment_num}} </view>
+          <view class="_view data-v-1511b834 flist-ft-view"> {{item.view_num}} </view>
+        </view>
+      </view>
+    </view>
+    <template data="{{...$root[$kk+'1'], $root}}" is="footer$aacb6d54"></template>
+  </view>
+</template>

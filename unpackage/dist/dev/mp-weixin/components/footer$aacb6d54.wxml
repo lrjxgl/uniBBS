@@ -1,0 +1,18 @@
+<template name="footer$aacb6d54">
+  <view class="_view data-v-7985ab44">
+    <view class="_view data-v-7985ab44 mfooter-row"></view>
+    <view class="_view data-v-7985ab44 mfooter">
+      <view bindtap="handleProxy" class="_view data-v-7985ab44 mfooter-item {{[tab == 'index' ? 'mfooter-active' : '']}}" data-eventid="{{'0'}}" data-comkey="{{$k}}">
+        <view class="_view data-v-7985ab44 mfooter-icon iconfont icon-home"></view> 首页 </view>
+      <view bindtap="handleProxy" class="_view data-v-7985ab44 mfooter-item {{[tab == 'product' ? 'mfooter-active' : '']}}" data-eventid="{{'1'}}" data-comkey="{{$k}}">
+        <view class="_view data-v-7985ab44 mfooter-icon iconfont icon-news"></view> 帖子 </view>
+      <view bindtap="handleProxy" class="_view data-v-7985ab44 mfooter-item {{[tab == 'product' ? 'mfooter-active' : '']}}" data-eventid="{{'2'}}" data-comkey="{{$k}}">
+        <image src="../../static/img/add.png" class="_image data-v-7985ab44 mfooter-add"></image>
+        <view class="_view data-v-7985ab44 mfooter-icon"> </view> 发布 </view>
+      <view bindtap="handleProxy" class="_view data-v-7985ab44 mfooter-item {{[tab == 'cart' ? 'mfooter-active' : '']}}" data-eventid="{{'3'}}" data-comkey="{{$k}}">
+        <view class="_view data-v-7985ab44 mfooter-icon iconfont icon-pic"></view> 版块 </view>
+      <view bindtap="handleProxy" class="_view data-v-7985ab44 mfooter-item {{[tab == 'user' ? 'mfooter-active' : '']}}" data-eventid="{{'4'}}" data-comkey="{{$k}}">
+        <view class="_view data-v-7985ab44 mfooter-icon iconfont icon-my"></view> 我的 </view>
+    </view>
+  </view>
+</template>

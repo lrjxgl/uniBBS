@@ -1,0 +1,15 @@
+<template name="set$2b0ce9f8">
+  <view class="_view data-v-940d3b62">
+    <view wx:if="{{pageLoad}}" class="_view data-v-940d3b62">
+      <view class="_view data-v-940d3b62 uni-list flex-col">
+        <view class="_view data-v-940d3b62 uni-list-cell " bindtap="handleProxy" data-eventid="{{'0'}}" data-comkey="{{$k}}">
+          <view class="_view data-v-940d3b62 uni-list-cell-navigate uni-navigate-right"> {{pageData.data.nickname}} </view>
+        </view>
+        <view class="_view data-v-940d3b62 uni-list-cell " bindtap="handleProxy" data-eventid="{{'1'}}" data-comkey="{{$k}}">
+          <view class="_view data-v-940d3b62 uni-list-cell-navigate uni-navigate-right"> 修改密码 </view>
+        </view>
+      </view>
+      <view class="_view data-v-940d3b62 btn-row-submit bg-danger" bindtap="handleProxy" data-eventid="{{'2'}}" data-comkey="{{$k}}">注销</view>
+    </view>
+  </view>
+</template>
