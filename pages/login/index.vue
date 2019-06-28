@@ -9,11 +9,11 @@
 		<form class="loginBox"  id="login-form" @submit="formSubmit" >
 			<view class="flexIcon">
       	<view class="flexIcon-icon iconfont icon-phone_light"></view>
-        <input type="text" class="flexIcon-text"  name="telephone" placeholder="请输入手机号码" />
+        <input type="text" class="flexIcon-text" placeholder-class="cl-white" name="telephone" placeholder="请输入手机号码" />
       </view>
       <view class="flexIcon"> 
       	<view class="flexIcon-icon iconfont icon-password"></view>
-        <input type="password" class="flexIcon-text"  name="password" placeholder="请输入登录密码" />
+        <input type="password" class="flexIcon-text"  name="password"  placeholder-class="cl-white"  placeholder="请输入登录密码" />
       </view>
 			<div></div>
       <button type="primary" formType="submit"  class="btn-row-submit">登陆</button>

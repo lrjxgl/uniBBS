@@ -10,11 +10,7 @@
 					<image class="flist-vd-bg" :src="item.videoimg" ></image>
 					<div class="flist-vd-play"></div>
 				</view>
-				
-				<view @click="goForum(item.id)" class="flist-vd  pointer" v-else-if="item.imgurl">
-					<image class="flist-vd-bg" :src="item.imgurl+'.middle.jpg'" mode="widthFix" ></image>
-					
-				</view>
+		 
 							
 				<view class="flist-imgs" v-if="item.imgslist">                   
 					<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="flist-imgs-img"  mode="widthFix" ></image>

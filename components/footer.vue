@@ -24,29 +24,29 @@
 		},
 		methods:{
 			goSearch:function(){
-				uni.redirectTo({
+				uni.reLaunch({
 					url:"../../pageforum/forum/search"
 				})
 			},
 			goHome:function(){
-				uni.redirectTo({
+				uni.reLaunch({
 					url:"../../pages/index/index"
 				})
 			},
 			 
 			goFenlei:function(){
-				uni.navigateTo({
+				uni.reLaunch({
 					url:"../../pageforum/forum_group/index"
 				})
 			},
 			 
 			goAdd:function(){
-				uni.redirectTo({
+				uni.navigateTo({
 					url:"../../pageforum/forum/add"
 				})
 			},
 			goUser:function(){
-				uni.redirectTo({
+				uni.reLaunch({
 					url:"../../pages/user/index"
 				})
 			}

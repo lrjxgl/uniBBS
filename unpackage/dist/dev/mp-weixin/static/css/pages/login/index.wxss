@@ -1,5 +1,0 @@
-@import "/static/css/vendor.wxss";
-
-.m20 {
-  margin: 0 30rpx;
-}

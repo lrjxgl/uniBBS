@@ -70,22 +70,20 @@
 			},
 			
 			formSubmit:function(e){
-				uni.request({
+				var that=this;
+				that.app.post({
 					url:app.apiHost+"/module.php?fromapp=wxapp&m=forum&a=save&ajax=1&authcode="+app.getAuthCode(),
 					data:e.detail.value,
-					method:"POST",
-					header:{
-						"content-type":"application/x-www-form-urlencoded"
-					},
+					
 					success:function(res){
 						uni.showToast({
-							title: res.data.message,
+							title: res.message,
 							duration: 2000
 						});
 						if(!res.error){
 							setTimeout(function(){
 								uni.navigateBack({
-									delta: 2
+									delta: 1
 								});
 							},1000)
 							

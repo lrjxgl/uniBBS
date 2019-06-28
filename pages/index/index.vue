@@ -12,34 +12,15 @@
 				</swiper-item>
 			
 			</swiper>
-			<div class="row-box-hd">
-				<div class="flex-1 mgl-10 f16">推荐版块</div>
-				<navigator url="../../pageforum/forum_group/index" class="row-box-more">更多</navigator>
-			</div>
-			<div class="flexlist">
-				<div class="flexlist-item bg-fff" v-for="(item,key) in pageData.grouplist" :key="key">
-					<navigator class="flexlist-imgbox" :url="'../../pageforum/forum/list?gid='+item.gid">
-						<img class="flexlist-img" :src="item.imgurl+'.100x100.jpg'">
-					</navigator>
-					<div class="flex-1">
-						<navigator class="flexlist-title" :url="'../../pageforum/forum/list?gid='+item.gid">{{item.title}}</navigator>
-						<div class="flexlist-row">
-							主题数
-							<text class="cl-num mgl-5 mgr-10">{{item.topic_num}}</text>
-
-							评论数
-							<text class="cl-num  mgl-5">{{item.comment_num}}</text>
-						</div>
-						<div class="flexlist-desc">{{item.description}}</div>
-					</div>
-
-				</div>
-
-			</div>
-			<div class="row-box-hd">
-				<div class="flex-1 mgl-10 f16">推荐帖子</div>
-
-			</div>
+			<view class="m-navPic mgt-5 mgb-5">
+				<navigator v-for="(item,key) in pageData.navList" :key="key"  :url="item.link1" class="m-navPic-item">
+					<image class="m-navPic-img"  mode="widthFix" :src="item.imgurl"></image>
+					<view class="m-navPic-title">{{item.title}}</view>
+				</navigator>
+			
+			</view>
+			 
+			 
 			<div class="flist">
 				<div @click="goForum(item.id)" class="flist-item" v-for="(item,fkey) in pageData.list" :key="fkey">
 					<div class="flist-user">
@@ -131,7 +112,7 @@
 						//登录
 						if (res.error == 1000) {
 							uni.navigateTo({
-								url: "/pages/login/index",
+								url: "../../pages/login/index",
 							})
 						} else {
 							isfirst = false;
