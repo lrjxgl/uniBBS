@@ -6,6 +6,7 @@
 			
 		</view>
 		<view class="flist">
+			<view class="emptyData" v-if="pageData.rscount==0">暂无帖子</view>
 			<view @click="goForum(item.id)" class="flist-item" v-for="(item,fkey) in pageData.list" :key="fkey">
 				<view class="flist-user">
 					<image :src="item.user_head+'.100x100.jpg'" class="flist-head"></image>
@@ -14,15 +15,10 @@
 						<view class="flist-time">{{item.timeago}}</view>
 					</view>
 				</view>
-				<view class="flist-title">{{item.title}}</view>
-				
-				<view class="flist-vd" v-if="item.videourl">
-					<image class="flist-vd-bg" :src="item.videoimg" ></image>
-					<div class="flist-vd-play"></div>
-				</view>
-				
-				 
-							
+				<div class="flex mgb-5">
+					<div v-if="item.videourl" class="iconfont cl-red mgr-5 icon-video"></div>
+					<div class="flex-1">{{item.title}}</div>
+				</div>		
 				<view class="flist-imgs" v-if="item.imgslist">                   
 					<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="flist-imgs-img"  mode="widthFix" ></image>
 				</view>

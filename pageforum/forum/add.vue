@@ -16,9 +16,21 @@
 						<view class="input-flex-label flex-1">内容</view>
 						<textarea name="content" class="h100 textarea-flex-text"></textarea>
 					</view>
-					<upimg-box></upimg-box>
+					<div class="tabs-border">
+						<div :class="tab==''?'tabs-border-active':''" @click="tab=''" class="tabs-border-item">图片</div>
+						<div @click="tab='video'"  :class="tab=='video'?'tabs-border-active':''"   class="tabs-border-item">视频</div>
+					</div>
+					<div :class="tab=='video'?'none':''">
+						<input maxlength="-1" type="text" class="none" name="imgsdata" :value="imgsData" />
+						<upimg-box @call-parent="callImgsData" name="imgsdata"></upimg-box>
+					</div>
+					<div  :class="tab==''?'none':''">
+						<input  maxlength="-1" type="text" class="none" name="videourl" :value="mp4url" />
+						<up-video @call-parent="callMp4url" dTrueMp4url="" dMp4url=""></up-video>
+					</div>
+					 
 					<button formType="submit" class="btn-row-submit">提交</button>
-				</form>
+				</form> 
 			</view>
 		</view>
 	</view>
@@ -27,18 +39,23 @@
 <script>
 	import pickergroup from "../../components/pickergroup.vue";
 	import upimgBox from "../../components/upimgbox.vue";
+	import upVideo from "../../components/up-video.vue";
 	var app = require("../../common/common.js");
 	var id;
 	export default {
 		components:{
 			pickergroup,
-			upimgBox
+			upimgBox,
+			upVideo
 		},
 		data:function(){
 			return {
 				pageLoad:false, 
 				pageHide:false,
 				pageData:{},
+				tab:"",
+				mp4url:"",
+				imgsData:""
 			}
 			
 		},
@@ -52,7 +69,12 @@
 			})
 		},
 		methods: {
-			
+			callImgsData:function(e){
+				this.imgsData=e;
+			},
+			callMp4url:function(e){
+				this.mp4url=e;
+			}, 
 			getPage: function () {
 				var that = this;
 				uni.request({
@@ -64,7 +86,7 @@
 						}
 						that.pageLoad = true;
 						that.pageData = res.data.data;
-
+						
 					}
 				})
 			},

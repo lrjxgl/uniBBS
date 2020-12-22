@@ -3,6 +3,7 @@
 		onLaunch: function () {
 			console.log('App Launch');
 			// #ifdef APP-PLUS
+			/*
 			// 锁定屏幕方向
 			plus.screen.lockOrientation('portrait-primary'); //锁定
 			console.log(plus.runtime.version);
@@ -31,6 +32,7 @@
 					}
 				}
 			})
+			*/
 			// #endif
 		},
 		onShow: function () {

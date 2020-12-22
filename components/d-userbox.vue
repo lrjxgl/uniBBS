@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<div v-if="muser" class="d-userbox">
-			<image class="d-userbox-head" :src="muser.user_head+'.100x100.jpg'"></image>
+			<image @click="goUser(muser.userid)" class="d-userbox-head" :src="muser.user_head+'.100x100.jpg'"></image>
 			<div class="flex-1">
-				<div class="d-userbox-nick">{{muser.nickname}}</div>
+				<div @click="goUser(muser.userid)" class="d-userbox-nick">{{muser.nickname}}</div>
 				<div class="d-userbox-follows flex-ai-center">
 					<div>粉丝</div>
 					<text class="cl-num mgr-5 flex-center">{{muser.followed_num}}</text> 
@@ -37,6 +37,12 @@
 			}
 		},
 		methods:{
+			goUser:function(userid){
+				console.log(userid)
+				uni.navigateTo({
+					url:"../../pageforum/forum_home/index?userid="+userid
+				})
+			},
 			followToggle:function(userid){
 				var that=this;
 				uni.request({

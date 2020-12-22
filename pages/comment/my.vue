@@ -167,9 +167,19 @@
 				if(this.tablename.substr(0,4)=="mod_"){
 					$m=this.tablename.replace("mod_","");
 				}
-				uni.navigateTo({
-					url:"/pages/"+$m+"/show?id="+id
-				})
+				switch($m){
+					case "forum":
+							uni.navigateTo({
+								url:"../../pageforum/"+$m+"/show?id="+id
+							})
+						break;
+					default:
+							uni.navigateTo({
+								url:"/pages/"+$m+"/show?id="+id
+							})
+						break;
+				}
+				
 			}
 		},
 	}

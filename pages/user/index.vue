@@ -25,16 +25,6 @@
 				</div>
 				 
 				 
-				<div v-for="(item,index) in pageData.navList" :key="index">
-					<div class="m-navPic mgb-5">
-						 
-						<navigator v-for="(cc,ccindex) in item.child" :url="cc.link_url" :key="ccindex" class="m-navPic-item">
-							<div class="m-navPic-icon" v-bind:class="cc.icon"></div>
-							<div class="m-navPic-title">{{cc.title}}</div>
-						</navigator>
-						 
-					</div>
-				</div>	
 				 
 
 

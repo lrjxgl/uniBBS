@@ -47,7 +47,7 @@
 			},
 			goUser:function(){
 				uni.reLaunch({
-					url:"../../pages/user/index"
+					url:"../../pageforum/forum/user"
 				})
 			}
 		}

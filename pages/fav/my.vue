@@ -1,8 +1,8 @@
 <template>
 	<view v-if="pageLoad">
 		<div class="tabs-border">
-			<div @click="setTable('article')" class="tabs-border-item tabs-border-active">文章</div>
-			<div @click="setTable('forum')" class="tabs-border-item">帖子</div>
+			<div @click="setTable('article')" :class="tablename=='article'?'tabs-border-active':''" class="tabs-border-item">文章</div>
+			<div @click="setTable('mod_forum')" :class="tablename=='mod_forum'?'tabs-border-active':''"  class="tabs-border-item">帖子</div>
 			 
 		</div>
 		<view v-if="pageData.list.length==0">
@@ -19,7 +19,7 @@
 					</view>
 				</view>	
 				 
-				<view v-else-if="tablename=='forum'">
+				<view v-else-if="tablename=='mod_forum'">
 					<view @click="goForum(item.id)" class="row-item bg-fff">
 						<div class="flex-1">
 						<div class="cl1 f18">{{item.title}}</div> 
@@ -108,14 +108,10 @@
 					}
 				})
 			},
-			goBook: function(id) {
-				uni.navigateTo({
-					url: "../mbook/show?bookid=" + id
-				})
-			},
+			 
 			goForum: function(id) {
 				uni.navigateTo({
-					url: "../forum/show?id=" + id
+					url: "../../pageforum/forum/show?id=" + id
 				})
 			},
 			goArticle: function(id) {

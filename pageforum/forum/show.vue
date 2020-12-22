@@ -9,7 +9,13 @@
 				<view class="cl2">{{pageData.data.timeago}}</view>
 			</view>
 			<view class="d-content">
-				<image class="wmax mgb-5" mode="widthFix" v-for="(item,key) in pageData.imgslist" :key="key" :src="item"></image> 
+				<div v-if="pageData.data.videourl!=''" class="flex flex-center mgb-5">
+					<video :src="pageData.data.videourl" ></video>
+				</div>
+				<div class="flex flex-center mgb-5">
+					<image @longpress="downImg(item)" class="wmax mgb-5" mode="widthFix" v-for="(item,key) in pageData.imgslist" :key="key" :src="item"></image> 
+				</div>
+				
 			</view>
 			<rich-text class="d-content" :nodes="pageData.data.content">
 				 
@@ -75,6 +81,23 @@
 					}
 				})
 			},
+			downImg:function(url){
+				uni.downloadFile({
+				    url: url,  
+				    success: (res) => {
+				        if (res.statusCode === 200) {
+				            uni.saveImageToPhotosAlbum({
+				            	filePath:res.tempFilePath,
+								success:function(){
+									uni.showToast({
+										title:"图片保存成功"
+									})
+								}
+				            })
+				        }
+				    }
+				});
+			},
 			getPage: function () {
 				var that = this;
 				uni.request({
@@ -87,7 +110,7 @@
 						that.pageLoad = true;
 						//res.data.data.data.content+='<style>img{max-width:100%;width:220px;height:auto;}</style>';
 						res.data.data.data.content=app.html(res.data.data.data.content);
-						console.log(res.data.data.data.content);
+						 
 						that.pageData = res.data.data;
 
 					}

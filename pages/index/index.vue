@@ -20,7 +20,12 @@
 			
 			</view>
 			 
-			 
+			<div class="tabNav">
+				<div gourl="/module.php?m=forum" class="tabNav-item tabNav-item-active">推荐</div>
+				<div  @click="gourl('../../pageforum/forum/new')"  class="tabNav-item">最新</div>
+				<div  @click="gourl('../../pageforum/forum_feeds/index')"  class="tabNav-item">关注</div>
+				<div  @click="gourl('../../pageforum/forum_paihang/index')"  class="tabNav-item">名人榜</div>
+			</div> 
 			<div class="flist">
 				<div @click="goForum(item.id)" class="flist-item" v-for="(item,fkey) in pageData.list" :key="fkey">
 					<div class="flist-user">
@@ -30,18 +35,11 @@
 							<div class="flist-time">{{item.timeago}}</div>
 						</div>
 					</div>
-					<div class="flist-title">{{item.title}}</div>
-
-					<div class="flist-vd" v-if="item.videourl">
-						<image class="flist-vd-bg" :src="item.videoimg"></image>
-						<div class="flist-vd-play"></div>
+					<div class="flex mgb-5">
+						<div v-if="item.videourl" class="iconfont cl-red mgr-5 icon-video"></div>
+						<div class="flex-1">{{item.title}}</div>
 					</div>
-
-					<div class="flist-vd" v-else-if="item.imgurl">
-						<image class="flist-vd-bg" :src="item.imgurl+'.middle.jpg'" mode="widthFix"></image>
-
-					</div>
-
+	 
 					<div class="flist-imgs" v-if="item.imgslist">
 						<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="flist-imgs-img"
 						 mode="widthFix"></image>
@@ -193,5 +191,24 @@
 <style>
 swiper{
 		height: 440upx;
+	}
+	.tabNav{
+		padding: 10px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		background-color: #fff;
+		border-bottom: 1px solid #eee;
+	}
+	.tabNav-item{
+		cursor: pointer;
+		margin-right: 40px;
+		font-weight: 600;
+	}
+	.tabNav-item-active{
+		color: #f60;
+		padding-bottom: 3px;
+	 
 	}
 </style>

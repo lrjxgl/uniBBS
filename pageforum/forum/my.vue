@@ -4,14 +4,10 @@
 		<view class="flist" v-else>
 			<view  class="flist-item" v-for="(item,fkey) in pageData.list" :key="fkey">
 			 
-				<view class="flist-title" @click="goForum(item.id)">{{item.title}}</view>
-				
-				<view @click="goForum(item.id)" class="flist-vd pointer" v-if="item.videourl">
-					<image class="flist-vd-bg" :src="item.videoimg" ></image>
-					<div class="flist-vd-play"></div>
-				</view>
-		 
-							
+				<div class="flex mgb-5">
+					<div v-if="item.videourl" class="iconfont cl-red mgr-5 icon-video"></div>
+					<div class="flex-1">{{item.title}}</div>
+				</div>		
 				<view class="flist-imgs" v-if="item.imgslist">                   
 					<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="flist-imgs-img"  mode="widthFix" ></image>
 				</view>
