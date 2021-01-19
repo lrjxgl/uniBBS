@@ -2,27 +2,36 @@
 	<div v-if="pageLoad" class="main-body">
 		<div class="tabs-border-group">
 			<div class="tabs-border">
-				<div @click="tab='a'" :class="tab=='a'?'tabs-border-active':''" class="tabs-border-item">名人榜</div>
-				<div @click="tab='b'" :class="tab=='b'?'tabs-border-active':''"  class="tabs-border-item">文章榜</div>
+				<div @click="tab='a'" :class="tab=='a'?'tabs-border-active':''"  class="tabs-border-item">热帖榜</div>
+				<div @click="tab='b'" :class="tab=='b'?'tabs-border-active':''" class="tabs-border-item">名人榜</div>
+				
 			</div>
 			<div :class="tab=='a'?'tabs-border-box-active':''"  class="row-box tabs-border-box">
-				<div class="flex mgb-10">
-					<div class="td-a fwb">排行</div>
-					<div class="td-b fwb">头像</div>
-					<div class="td-c fwb">昵称</div>
-					<div class="flex-1"></div>
-					<div class="td-d fwb">粉丝</div>
-				</div>
-				 
-				<div @click="goUser(item.userid)" v-for="(item,index) in fsList" :key="index" class="flex flex-ai-center mgb-10">
-					<div class="td-a cl-num">{{index+1}}</div>
-					<div class="td-b">
-						<image  mode="widthFix" class="rdImg" :src="item.user_head+'.100x100.jpg'" ></image>
-					</div>
-					<div class="td-c">{{item.nickname}}</div>
-					<div class="flex-1"></div>
-					<div class="td-d cl-num">{{item.followed_num}}</div>
-				</div>
+				<view @click="goForum(item.id)" class="flist-item" v-for="(item,fkey) in wzList" :key="fkey">
+					<view class="flist-user">
+						<image :src="item.user_head+'.100x100.jpg'" class="flist-head"></image>
+						<view class="flex-1">
+							<view class="flist-nick">{{item.nickname}}</view>
+							<view class="flist-time">{{item.timeago}}</view>
+						</view>
+					</view>
+					<div class="flex mgb-5">
+						<div v-if="item.videourl" class="iconfont cl-red mgr-5 icon-video"></div>
+						<div class="flex-1">{{item.title}}</div>
+					</div>		
+					<view class="flist-imgs" v-if="item.imgslist">                   
+						<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="flist-imgs-img"  mode="widthFix" ></image>
+					</view>
+					
+					<view class="flex flist-ft">
+						<view class="flist-ft-love">
+							{{item.love_num}} </view>
+						<view class="flist-ft-cm">
+							{{item.comment_num}} </view>
+						<view class="flist-ft-view">
+							{{item.view_num}} </view>
+					</view>
+				</view> 
 				 
 			</div>
 			<div  @click="goUser(item.userid)" :class="tab=='b'?'tabs-border-box-active':''"  class="row-box tabs-border-box">
@@ -34,7 +43,7 @@
 					<div class="td-d fwb">积分</div>
 				</div>
 				 
-				<div v-for="(item,index) in wzList" :key="index" class="flex flex-ai-center mgb-10">
+				<div v-for="(item,index) in fsList" :key="index" class="flex flex-ai-center mgb-10">
 					<div class="td-a cl-num">{{index+1}}</div>
 					<div class="td-b">
 						<image mode="widthFix" class="rdImg" :src="item.user_head+'.100x100.jpg'" ></image>
@@ -43,7 +52,7 @@
 					<div class="flex-1"></div>
 					<div class="td-d cl-num">{{item.num}}</div>
 				</div>
-				{/foreach}
+				 
 			</div>
 		</div>
 	</div>
@@ -65,6 +74,11 @@
 			goUser:function(userid){
 				uni.navigateTo({
 					url:"../../pageforum/forum_home/index?userid="+userid
+				})
+			},
+			goForum:function(id){
+				uni.navigateTo({
+					url:"../../pageforum/forum/show?id="+id
 				})
 			},
 			getPage: function() {

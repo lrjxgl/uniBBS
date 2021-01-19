@@ -12,7 +12,7 @@
 				<div v-if="pageData.data.videourl!=''" class="flex flex-center mgb-5">
 					<video :src="pageData.data.videourl" ></video>
 				</div>
-				<div class="flex flex-center mgb-5">
+				<div class="flex-col flex-center mgb-5">
 					<image @longpress="downImg(item)" class="wmax mgb-5" mode="widthFix" v-for="(item,key) in pageData.imgslist" :key="key" :src="item"></image> 
 				</div>
 				
