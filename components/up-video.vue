@@ -8,10 +8,13 @@
 			</view>
 			<view v-if="videoProgress>0 && videoProgress<100">{{videoProgress}}%</view>
 			 
-			<video class="flex-1" v-if="truemp4url!='' && truemp4url!='true' " :src="truemp4url"></video> 
+			
 			
 			<input style="display: none;" type="file" name="upimg" id="upimg" />
 		</view>
+		<view>
+			<video style="width: 90%;" v-if="truemp4url!='' " :src="truemp4url"></video> 
+		</view>	
 	</view>
 </template>
 
@@ -33,7 +36,7 @@
 		},
 		created:function(){
 			that=this;
-			this.mp4url=this.dMp4url;
+			this.mp4url="";//this.dMp4url;
 			this.truemp4url=this.dTrueMp4url;
 			 
 			//console.log(typeof(this.truemp4url))
@@ -49,11 +52,10 @@
 						that.videoProgress=1;
 						var tempFilePath = ress.tempFilePath;
 						uni.request({
-							url:that.app.apiHost+"/index.php?m=ossupload&a=auth&ajax=1",
+							url:that.app.apiHost+"/ossupload/auth",
 							method:"GET",
 							data:{
-								authcode:that.app.getAuthCode(),
-								fromapp:that.app.fromapp(),
+								loginToken:that.app.getToken(),
 								ajax:1
 							},
 							success:(rs)=>{

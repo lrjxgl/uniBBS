@@ -1,30 +1,30 @@
 <template>
 	<view v-if="pageLoad">
-		<div class="tabs-border">
-			<div @click="setTable('article')" :class="tablename=='article'?'tabs-border-active':''" class="tabs-border-item">文章</div>
-			<div @click="setTable('mod_forum')" :class="tablename=='mod_forum'?'tabs-border-active':''"  class="tabs-border-item">帖子</div>
+		<view class="tabs-border">
+			<view @click="setTable('article')" class="tabs-border-item tabs-border-active">文章</view>
+			<view @click="setTable('forum')" class="tabs-border-item">帖子</view>
 			 
-		</div>
-		<view v-if="pageData.list.length==0">
+		</view>
+		<view v-if="list.length==0">
 			<view class="emptyData">暂无收藏</view>
 		</view>
 		<view v-else>
-			<view v-for="(item,key) in pageData.list" :key="key">
+			<view v-for="(item,key) in  list" :key="key">
 				<view v-if="tablename=='article'">
 					<view @click="goArticle(item.id)" class="row-item bg-fff">
-						<div class="flex-1">
-						<div class="cl1 f18">{{item.title}}</div> 
-						<div class="cl2">{{item.description}}</div>
-						</div>
+						<view class="flex-1">
+						<view class="cl1 f18">{{item.title}}</view> 
+						<view class="cl2">{{item.description}}</view>
+						</view>
 					</view>
 				</view>	
 				 
-				<view v-else-if="tablename=='mod_forum'">
+				<view v-else-if="tablename=='forum'">
 					<view @click="goForum(item.id)" class="row-item bg-fff">
-						<div class="flex-1">
-						<div class="cl1 f18">{{item.title}}</div> 
+						<view class="flex-1">
+						<view class="cl1 f18">{{item.title}}</view> 
 						 
-						</div>
+						</view>
 					</view>
 				</view> 
 			</view>
@@ -34,9 +34,7 @@
 </template>
 
 <script>
-	 
-	var per_page = 0;
-	var isfirst = true;
+ 
 
 	export default {
 
@@ -44,7 +42,10 @@
 			return {
 				pageLoad: false,
 				pageData: {},
-				tablename: "article"
+				list:[],
+				tablename: "article",
+				isFirst:true,
+				per_page:0
 			}
 		},
 		onLoad: function(option) {
@@ -63,55 +64,54 @@
 		methods: {
 			getPage: function() {
 				var that = this;
-				uni.request({
-					url: that.app.apiHost + "?m=fav&a=mylist&ajax=1",
+				that.app.get({
+					url: that.app.apiHost + "/fav/mylist?ajax=1",
 					data: {
-						authcode: that.app.getAuthCode(),
-						fromapp: that.app.fromapp(),
 						tablename: that.tablename
 					},
-					success: function(data) {
-						isfirst = false;
-						that.pageData = data.data.data;
+					success: function(res) {
+						that.isFirst = false;
+						that.list = res.data.list;
 						that.pageLoad = true;
-						per_page = data.data.data.per_page;
+						that.per_page = res.data.per_page;
 					}
 				})
 			},
 
 			getList: function() {
 				var that = this;
-				if (!isfirst && per_page == 0) return false;
-				uni.request({
-					url: that.app.apiHost + "?m=fav&a=mylist&ajax=1",
+				if (!that.isFirst && that.per_page == 0) return false;
+				that.app.get({
+					url: that.app.apiHost + "/fav/mylist?ajax=1",
 					data: {
-						per_page: per_page,
-						fromapp: that.app.fromapp(),
-						authcode: that.app.getAuthCode(),
+						per_page: that.per_page,						
 						tablename: that.tablename
 					},
-					success: function(data) {
-
-						if (!data.data.error) {
-							if (isfirst) {
-								that.pageData.list = data.data.data.list;
-								isfirst = false;
-							} else {
-
-								that.pageData.list = that.app.json_add(that.pageData.list, data.data.data.list);
-							}
-							per_page = data.data.data.per_page;
-
+					success: function(res) {
+						if(res.error){
+							return false;
 						}
-
+						if(that.isFirst){
+							that.list=res.data.list;
+							that.isFirst=false;
+						}else{
+							for(var i in res.data.list){
+								that.list.push(res.data.list[i])
+							}
+						}
+						that.per_page=res.data.per_page;
 
 					}
 				})
 			},
-			 
+			goBook: function(id) {
+				uni.navigateTo({
+					url: "../mbook/show?bookid=" + id
+				})
+			},
 			goForum: function(id) {
 				uni.navigateTo({
-					url: "../../pageforum/forum/show?id=" + id
+					url: "../forum/show?id=" + id
 				})
 			},
 			goArticle: function(id) {

@@ -4,6 +4,9 @@
 			<view class="main-body">
 				<form  @submit="formSubmit"  >
 					<view class="none">
+						<input type="text" name="gid" :value="gid" />
+						<input type="text" name="catid" :value="catid" />
+				 
 						<input type="text" name="id" :value="pageData.data.id" />
 					</view>
 					<view class="input-flex">
@@ -12,7 +15,7 @@
 					</view>
 					<view class="input-flex">
 						<view class="input-flex-label">选择板块</view> 							
-						<pickergroup   placeholder="请选择" :defaultGid="pageData.data.gid" :defaultCatid="pageData.data.catid"   :data="pageData.grouplist"></pickergroup>						 
+						<pickergroup class="flex flex-1"  @call-parent="setCat"   placeholder="请选择" :defaultGid="pageData.data.gid" :defaultCatid="pageData.data.catid"   :data="pageData.grouplist"></pickergroup>						 
 					</view>
 
 					<view class="textarea-flex">
@@ -59,7 +62,9 @@
 				tab:"",
 				mp4url:"",
 				imgsData:"",
-				truemp4url:""
+				truemp4url:"",
+				gid:0,
+				catid:0
 			}
 		},
 		onLoad: function (option) {
@@ -78,10 +83,15 @@
 			callMp4url:function(e){
 				this.mp4url=e;
 			}, 
+			setCat:function(e){
+				console.log(e)
+				this.catid=e.catid;
+				this.gid=e.gid;
+			}, 
 			getPage: function () {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/module.php?fromapp=wxapp&m=forum&ajax=1&a=add",
+					url: that.app.apiHost + "/forum/index?a=add",
 					data:{
 						id:id
 					},
@@ -99,7 +109,7 @@
 			formSubmit:function(e){
 				var that=this;
 				that.app.post({
-					url:that.app.apiHost+"/module.php?fromapp=wxapp&m=forum&a=save&ajax=1",
+					url:that.app.apiHost+"/forum/save?ajax=1",
 					data:e.detail.value,
 					
 					success:function(res){
@@ -110,7 +120,7 @@
 						if(!res.error){
 							setTimeout(function(){
 								uni.navigateBack({
-									delta: 2
+									delta: 1
 								});
 							},1000)
 							

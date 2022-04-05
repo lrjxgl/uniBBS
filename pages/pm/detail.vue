@@ -44,7 +44,7 @@
 </template>
 
 <script>
-	var timer=0;
+	 
 	var inAjax=false;
 	var windowHeight=0;
 	export default{
@@ -60,7 +60,8 @@
 				sch: 0,
 				oldsch: 0,
 				scrollTop: 10000,
-				time:0
+				time:0,
+				timer:0
 			}
 		},
 		onLoad:function(ops){
@@ -71,9 +72,15 @@
 			this.getPage();
 			
 		},
+		onUnload:function(){
+			clearInterval(this.timer);
+			this.timer=0;
+			console.log("close timer");
+		},
 		onHide:function(){
-			clearInterval(timer);
-			timer=0;
+			clearInterval(this.timer);
+			this.timer=0;
+			console.log("close timer");
 		},
 		onShow:function(){
 			this.setTimer();
@@ -102,17 +109,17 @@
 			},
 			setTimer:function(){
 				var that=this;
-				if(timer>0){
-					clearInterval(timer);
+				if(this.timer>0){
+					clearInterval(this.timer);
 				}
-				timer=setInterval(function(){
+				this.timer=setInterval(function(){
 					that.getNew()
 				},10000)
 			},
 			getNew:function(){
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/index.php?m=pm&a=getnew&ajax=1",
+					url:that.app.apiHost+"/pm/getnew?ajax=1",
 					data:{
 						t_userid:that.t_userid
 					},
@@ -125,7 +132,7 @@
 			getPage:function(){
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/index.php?m=pm&a=detail&ajax=1",
+					url:that.app.apiHost+"/pm/detail?ajax=1",
 					data:{
 						t_userid:that.t_userid
 					},
@@ -158,7 +165,7 @@
 					return false;
 				}
 				that.app.get({
-					url:that.app.apiHost+"/index.php?m=pm&a=detail&ajax=1",
+					url:that.app.apiHost+"/pm/detail?ajax=1",
 					data:{
 						t_userid:that.t_userid,
 						per_page:that.per_page
@@ -199,7 +206,7 @@
 			sendPm:function(){
 				var that=this;
 				that.app.post({
-					url:that.app.apiHost+"/index.php?m=pm&a=sendSave&ajax=1",
+					url:that.app.apiHost+"/pm/sendSave?ajax=1",
 					data:{
 						t_userid:that.t_userid,
 						content:that.content

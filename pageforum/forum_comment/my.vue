@@ -49,7 +49,7 @@
 			getPage: function() {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/index.php?m=comment&a=my&tablename=" + tablename + "&ajax=1",
+					url: that.app.apiHost + "/comment/my?tablename=" + tablename + "&ajax=1",
 					success: function(res) {
 						that.pageLoad = true;
 						that.list = res.data.list;
@@ -63,7 +63,7 @@
 					return false;
 				}
 				that.app.get({
-					url: that.app.apiHost + "/index.php?m=comment&a=my&tablename=" + tablename + "&ajax=1",
+					url: that.app.apiHost + "/comment/my?tablename=" + tablename + "&ajax=1",
 					data: {
 						per_page: that.per_page
 					},
@@ -90,7 +90,7 @@
 				    success: function (res) {
 				        if (res.confirm) {
 				            that.app.get({
-				            	url: that.app.apiHost + "/index.php?m=comment&a=delete&tablename=" + tablename + "&ajax=1&id=" + id,
+				            	url: that.app.apiHost + "/comment/delete?tablename=" + tablename + "&id=" + id,
 				            	dataType: "json",
 				            	success: function(res) {
 				            		var list = that.list;

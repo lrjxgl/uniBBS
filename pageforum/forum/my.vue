@@ -1,23 +1,23 @@
 <template>
 	<view v-if="pageLoad">
-		<div v-if="pageData.list.length==0" class="emptyData">暂无发帖</div>
-		<view class="flist" v-else>
-			<view  class="flist-item" v-for="(item,fkey) in pageData.list" :key="fkey">
+		<div v-if="list.length==0" class="emptyData">暂无发帖</div>
+		<view class="sglist" v-else>
+			<view  class="sglist-item" v-for="(item,fkey) in  list" :key="fkey">
 			 
-				<div class="flex mgb-5">
+				<div @click="goForum(item.id)" class="flex mgb-5">
 					<div v-if="item.videourl" class="iconfont cl-red mgr-5 icon-video"></div>
 					<div class="flex-1">{{item.title}}</div>
 				</div>		
-				<view class="flist-imgs" v-if="item.imgslist">                   
-					<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="flist-imgs-img"  mode="widthFix" ></image>
+				<view @click="goForum(item.id)" class="sglist-imglist" v-if="item.imgslist">                   
+					<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="sglist-imglist-img"  mode="widthFix" ></image>
 				</view>
 				
-				<view class="flex flist-ft mgb-5">
-					<view class="flist-ft-love">
+				<view class="flex sglist-ft">
+					<view class="sglist-ft-love">
 						{{item.love_num}} </view>
-					<view class="flist-ft-cm">
+					<view class="sglist-ft-cm">
 						{{item.comment_num}} </view>
-					<view class="flist-ft-view">
+					<view class="sglist-ft-view">
 						{{item.view_num}} </view>
 				</view>
 				<view class="flex">
@@ -34,24 +34,21 @@
 </template>
 
 <script> 
-	var app= require("../../common/common.js"); 
-	var per_page=0;
-	var isfirst=true;
-	var catid=0;
-	var gid=0;
+	 
 	export default{
 	
 		data:function(){
 			return {
 				pageLoad:false, 
 				pageHide:false,
-				pageData:{},
+				per_page:0,
+				isFirst:true,
+				list:[]
 			}
 			
 		},
 		onLoad:function(option){
-			gid=option.gid;
-			catid=option.catid;
+			 
 			uni.setNavigationBarTitle({
 				title: '我的帖子'
 			});
@@ -74,75 +71,37 @@
 			this.refresh();
 		},
 		methods:{
-			getPage:function(){
+			getPage:function() {
 				var that=this;
-				uni.request({
-					url:app.apiHost+"/module.php?fromapp=wxapp&m=forum&a=my&ajax=1",
-					data:{
-						gid:gid,
-						catid:catid,
-						authcode:app.getAuthCode()
-					},
+				that.app.get({
+					url:that.app.apiHost+"/forum/index?a=my",
 					success:function(res){
-						//登录
-						if(res.data.error==1000){
-							uni.navigateTo({
-								url:"/pages/login/index",
-							})
-						}else{
-							isfirst=false;
-							that.pageLoad=true;
-							that.pageData=res.data.data;
-							per_page=res.data.data.per_page;
-						}
-						 
+						that.pageLoad=true;
+						that.list=res.data.list;
+						that.per_page=res.data.per_page;
 					}
 				})
 			},
-			setCat:function(cid){
-				catid=cid;
-				isfirst=true;
-				per_page=0;
-				if(catid==0){
-					this.defaultActive=activeClass;
-				}else{
-					this.defaultActive="";
-				}
-				var catlist=this.pageData.catlist;
-				for(var i in catlist){
-					if(catlist[i].catid==catid){
-						catlist[i].isactive=1;
-					}else{
-						catlist[i].isactive=0;
-					}
-				}
-				this.pageData.catlist=catlist;
-				this.getList();
-			 },
-			getList:function(){
+			getList:function() {
 				var that=this;
-				if(!isfirst && per_page==0) return false;
-				uni.request({
-					url:app.apiHost+"/module.php?fromapp=wxapp&m=forum&a=my&ajax=1",data:{
-						per_page:per_page,
-						catid:catid,
-						gid:gid,
-						authcode:app.getAuthCode()
+				if(that.per_page==0 && !that.isFirst){
+					return false;
+				}
+				that.app.get({
+					url:that.app.apiHost+"/forum/index?a=my",
+					data:{
+						per_page:that.per_page
 					},
-					success:function(res){
-						
-						if(!res.data.error){
-							if(isfirst){
-								that.pageData.list=res.data.data.list;
-								isfirst=false;
-							}else{
-								
-								that.pageData.list=app.json_add(that.pageData.list,res.data.data.list);
-							}
-							per_page=res.data.data.per_page;  
-							
+					success:function(res){						 
+						that.per_page=res.data.per_page;
+						if(that.isFirst){
+							that.list=res.data.list;
+							that.isFirst=false;
+						}else{
+							for(var i in res.data.list){
+								that.list.push(res.data.list[i]);
+							}							
 						}
-						
 						
 					}
 				})
@@ -168,16 +127,13 @@
 					content: '删除后不可恢复，确认删除？',
 					success: function (res) {
 						if (res.confirm) {
-							uni.request({
-								url:app.apiHost+"/module.php?fromapp=wxapp&m=forum&a=delete&ajax=1&id="+id,
-								data:{
-									authcode:app.getAuthCode()
-								},
+							that.app.get({
+								url:that.app.apiHost+"/forum/delete?id="+id,
 								success:function(res){
 									uni.showToast({
-										title:res.data.message
+										title:res.message
 									});
-									if(!res.data.error){
+									if(!res.error){
 										that.getPage();
 									}
 								}

@@ -1,40 +1,30 @@
 <template>
 	<view v-if="pageLoad">
 		<div v-if="!list || list.length==0" class="emptyData">暂无帖子</div>
-		<view class="flist" v-else>
-			<view  class="flist-item" v-for="(item,fkey) in  list" :key="fkey">
-				<view class="flist-user">
-					<image :src="item.user_head+'.100x100.jpg'" class="flist-head"></image>
+		<view class="sglist" v-else>
+			<view  class="sglist-item" v-for="(item,fkey) in  list" :key="fkey">
+				<view @click="goUser(item.userid)"  class="flex mgb-5">
+					<image :src="item.user_head+'.100x100.jpg'" class="wh-40 mgr-5 bd-radius-50"></image>
 					<view class="flex-1">
-						<view class="flist-nick">{{item.nickname}}</view>
-						<view class="flist-time">{{item.timeago}}</view>
+						<view class="f14 mgb-5">{{item.nickname}}</view>
+						<view class="f12 cl3">{{item.timeago}}</view>
 					</view>
 				</view>
-				<view class="flist-title" @click="goForum(item.id)">{{item.title}}</view>
-				
-				<view @click="goForum(item.id)" class="flist-vd pointer" v-if="item.videourl">
-					<image class="flist-vd-bg" :src="item.videoimg" ></image>
-					<div class="flist-vd-play"></div>
-				</view>
-		 
-							
-				<view class="flist-imgs" v-if="item.imgslist">                   
-					<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="flist-imgs-img"  mode="widthFix" ></image>
+				<div @click="goForum(item.id)" class="flex mgb-5">
+					<div v-if="item.videourl" class="iconfont cl-red mgr-5 icon-video"></div>
+					<div class="flex-1">{{item.title}}</div>
+				</div>		
+				<view @click="goForum(item.id)" class="sglist-imglist" v-if="item.imgslist">                   
+					<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="sglist-imglist-img"  mode="widthFix" ></image>
 				</view>
 				
-				<view class="flex flist-ft mgb-5">
-					<view class="flist-ft-love">
+				<view class="flex sglist-ft">
+					<view class="sglist-ft-love">
 						{{item.love_num}} </view>
-					<view class="flist-ft-cm">
+					<view class="sglist-ft-cm">
 						{{item.comment_num}} </view>
-					<view class="flist-ft-view">
+					<view class="sglist-ft-view">
 						{{item.view_num}} </view>
-				</view>
-				<view class="flex">
-					<view class="cl3">{{item.timeago}}</view>
-					<view class="flex-1"></view>
-					<navigator :url="'../forum/edit?id='+item.id" class="btn-small btn-outline-success mgr-10">编辑</navigator>
-					<view @click="del(item.id)"  class="btn-small btn-outline-danger">删除</view>
 				</view>
 			</view>
 			
@@ -84,7 +74,7 @@
 			getPage:function(){
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/module.php?m=forum_feeds&ajax=1",
+					url:that.app.apiHost+"/forum_feeds/index?ajax=1",
 					success:function(res){
 						if(res.error){
 							return false;
@@ -102,7 +92,7 @@
 				var that=this;
 				if(!that.isFIrst && that.per_page==0) return false;
 				that.app.get({
-					url:that.app.apiHost+"/module.php?m=forum_feeds&ajax=1",
+					url:that.app.apiHost+"/forum_feeds/index?ajax=1",
 					data:{
 						per_page:that.per_page
 					},
@@ -137,6 +127,11 @@
 			},
 			loadMore:function(){
 				this.getList();
+			},
+			goUser: function(userid) {
+				uni.navigateTo({
+					url: "../forum_home/index?userid=" + userid
+				})
 			}
 			 
 		},

@@ -1,7 +1,7 @@
 <template>
-	<div class="body">
-		<div v-if="pageLoad">
-
+	<div v-if="pageLoad" class="body">
+		<div v-if="!unLogin" >
+	
 			<div class="main-body">
 				<div class="uhead">
 
@@ -28,10 +28,7 @@
 						<div class="row-item-icon icon-news  cl-u"></div>
 						<div class="row-item-title">我的贴子</div>
 					</div>
-					<div  @click="gourl('../../pages/pm/index')"  class="row-item">
-						<div class="row-item-icon icon-message_light  cl-u"></div>
-						<div class="row-item-title">我的私信</div>
-					</div>
+					 
 					
 					<div  @click="gourl('../../pageforum/forum_comment/my')" class="row-item">
 						<div class="row-item-icon icon-comment  cl-u"></div>
@@ -45,10 +42,7 @@
 						<div class="row-item-icon icon-choiceness  cl-u"></div>
 						<div class="row-item-title">金币日志</div>
 					</div>
-					<div @click="gourl('../../pages/notice/my')" class="row-item">
-						<div class="row-item-icon icon-notice  cl-u"></div>
-						<div class="row-item-title">我的消息</div>
-					</div>
+					 
 				</div>
 
 				<div class="row-box mgb-5">
@@ -66,10 +60,10 @@
 			</div>
 
 		</div>
-		<div v-else class="bg-fff pd-10">
-			<div class="flex flex-center mgb-10 cl2">您还未登录,请先登录</div>
+		<div v-else class="unLoginBox">
+			<div class="flex flex-center mgb-20 cl2">您还未登录,请先登录</div>
 			<div class="flex flex-center">
-				<navigator class="btn-small" url="../login/index">前往登录</navigator>
+				<navigator class="btn-small" url="../../pages/login/index">前往登录</navigator>
 			</div>
 
 		</div>
@@ -78,7 +72,7 @@
 </template>
 
 <script>
-	import mtFooter from "../../components/forumfooter.vue";
+	import mtFooter from "../forumfooter.vue";
 	export default {
 		components: {
 			mtFooter
@@ -86,7 +80,7 @@
 		data: function() {
 			return {
 				pageLoad: false,
-
+				unLogin:false,
 				user: {},
 				topic_num:0,
 				comment_num:0
@@ -96,7 +90,9 @@
 		onLoad: function() {
 			this.getPage();
 		},
-
+		onShow:function(){
+			this.getPage();
+		},
 		onShareAppMessage: function() {
 
 		},
@@ -109,12 +105,19 @@
 			getPage: function() {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/module.php?m=forum&a=user",
+					url: that.app.apiHost + "/forum/user",
+					unLogin:true,
 					success: function(res) {
+						if(res.error){
+							that.unLogin=true;
+						}else{
+							that.unLogin=false;
+							that.user = res.data.user;
+							that.topic_num=res.data.topic_num;
+							that.comment_num=res.data.comment_num;
+						}
 						that.pageLoad = true;
-						that.user = res.data.user;
-						that.topic_num=res.data.topic_num;
-						that.comment_num=res.data.comment_num;
+						
 					}
 				})
 			}
@@ -123,9 +126,7 @@
 </script>
 
 <style>
-	.body {
-		background-color: #e3e3e3;
-	}
+	 
 
 	.uhead {
 		display: flex;

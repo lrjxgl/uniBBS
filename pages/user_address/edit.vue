@@ -58,33 +58,26 @@
 		methods: {
 			getPage: function () {
 				var that = this;
-				uni.request({
-					url: that.app.apiHost + "?m=user_address&a=add&ajax=1&id=" + id,
-					data: {
-						authcode: that.app.getAuthCode(),
-						fromapp: that.app.fromapp()
-					},
-					success: function (data) {
+				that.app.get({
+					url: that.app.apiHost + "/user_address/add?id=" + id,
+					success: function (res) {
 						that.pageLoad = true;
-						that.pageData = data.data.data;
+						that.pageData = res.data;
 
 					}
 				})
 			},
 			formSubmit: function (e) {
 				var that=this;
-				uni.request({
-					url: that.app.apiHost + "?m=user_address&a=save&ajax=1&fromapp=" + that.app.fromapp() + "&authcode=" + that.app.getAuthCode(),
-					method: "POST",
-					header: {
-						"content-type": "application/x-www-form-urlencoded"
-					},
+				that.app.post({
+					url: that.app.apiHost + "/user_address/save?",
+		
 					data: e.detail.value,
 					success: function (res) {
 						uni.showToast({
-							"title":res.data.message
+							"title":res.message
 						})
-						if(!res.data.error){
+						if(!res.error){
 							setTimeout(function(){
 								uni.navigateBack()
 							},600)

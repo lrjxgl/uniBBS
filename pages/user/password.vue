@@ -1,23 +1,23 @@
 <template>
-	<div>
-		<div v-if="pageLoad">
+	<view>
+		<view v-if="pageLoad">
 		 <form @submit="submit">
-		 	<div class="input-flex">
-		 		<div class="input-flex-label">旧密码</div>
+		 	<view class="input-flex">
+		 		<view class="input-flex-label">旧密码</view>
 		 		<input password="password" class="input-flex-text" name="oldpassword"   >
-		 	</div>
-			<div class="input-flex">
-				<div class="input-flex-label">新密码</div>
+		 	</view>
+			<view class="input-flex">
+				<view class="input-flex-label">新密码</view>
 				<input password="password" class="input-flex-text" name="password"   >
-			</div>
-			<div class="input-flex">
-				<div class="input-flex-label">重复密码</div>
+			</view>
+			<view class="input-flex">
+				<view class="input-flex-label">重复密码</view>
 				<input password="password" class="input-flex-text" name="password2"   >
-			</div>
+			</view>
 		 	<button type="submit" form-type="submit" class="btn-row-submit">保存</button>
 		 </form>
-		</div>
-	</div>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -40,34 +40,27 @@
 		methods:{
 			getPage:function(){
 				var that=this;
-				uni.request({
-					url:that.app.apiHost+"?m=user&a=password&ajax=1",
-					data:{
-						authcode: that.app.getAuthCode(),
-						fromapp:that.app.fromapp()
-					},
-					success:function(data){
+				that.app.get({
+					url:that.app.apiHost+"/user/password?ajax=1",
+	
+					success:function(res){
 						that.pageLoad=true;
-						that.pageData=data.data.data;
+						that.pageData=res.data;
 						 
 					}
 				})
 			},
 		 submit:function(e){
-			 var that=this;
-			uni.request({
-				url:that.app.apiHost+"?m=user&a=passwordsave&ajax=1&fromapp="+that.app.fromapp()+"&authcode="+that.app.getAuthCode(),
-				method:"POST",
-				header:{
-					"content-type":"application/x-www-form-urlencoded"
-				},
+			var that=this;
+			that.app.post({
+				url:that.app.apiHost+"/user/passwordsave?",
 				data:e.detail.value,
 				success:function(res){
 					
 					uni.showToast({
-						"title":res.data.message
+						"title":res.message
 					})
-					if(!res.data.error){
+					if(!res.error){
 						setTimeout(function(){
 							uni.navigateBack()
 						},600)

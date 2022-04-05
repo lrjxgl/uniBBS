@@ -64,10 +64,10 @@
 		methods:{
 			getList:function(){
 				var that=this;
-				uni.request({
-					url:that.app.apiHost+"?fromapp=wxapp&m=comment&ajax=1&tablename="+this.tablename+"&objectid="+this.objectid,
+				that.app.get({
+					url:that.app.apiHost+"/comment/index?tablename="+this.tablename+"&objectid="+this.objectid,
 					success:function(res){
-						that.cmData=res.data.data;
+						that.cmData=res.data;
 					}
 				})
 			},
@@ -83,17 +83,12 @@
 			},
 			cmFormSubmit:function(e){
 				var that=this;
-				uni.request({
-					url:that.app.apiHost+"?fromapp=wxapp&m=comment&a=save&ajax=1&authcode="+that.app.getAuthCode(),
+				that.app.post({
+					url:that.app.apiHost+"/comment/save",
 					data:e.detail.value,
-					method:"POST",
-					header:{
-						"content-type":"application/x-www-form-urlencoded"
-					},
 					success:function(res){
-						console.log(res.data);
 						uni.showToast({
-							title: res.data.message,
+							title: res.message,
 							duration: 2000
 						});
 						that.cmBtnClass="";

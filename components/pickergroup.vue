@@ -71,7 +71,7 @@
 			this.gid=this.data[m].gid;
 			this.pholder=pholder;
 			this.value=[parseInt(m),parseInt(n)];
-			 
+			this.$emit("callParent",{gid:this.gid,catid:this.catid}); 
 		},
 		methods: {
 			bindChange: function (e) {
@@ -91,7 +91,8 @@
 				this.gid=this.data[m].gid;
 				
 				this.pholder=pholder;
-				
+				console.log({gid:this.gid,catid:this.catid})
+				this.$emit("callParent",{gid:this.gid,catid:this.catid});
 			},
 			pickerBoxShow: function(){
 				this.showClass = "";

@@ -1,28 +1,29 @@
 <template>
-	<div>
-		<div class="raty-group" :class="gclass" >
-			<div class="raty-label" v-if="label!=''">{{label}}</div>
+	<view>
+		<view class="raty-group" :class="gclass" >
+			<view class="raty-label" v-if="label.length>0">{{label}}</view>
 			<input type="text" :name="fields" :value="num" class="raty-value none" />
-			<div class="raty-row">
-				<div class="raty-item">
-					<div class="raty-no" @click="setRaty(index)" v-for="(item,index) in items" :key="index"></div> 
-					<div class="raty-num">+{{num}}</div>
-				</div>
-				<div class="raty-item">
-					<div  v-for="(item,index) in gradeItems" @click="setRaty(index)" :key="index" class="raty-yes"></div>
-				</div>
-			</div>
+			<view class="raty-row">
+				<view class="raty-item">
+					<view class="raty-no" @click="setRaty(index)" v-for="(item,index) in items" :key="index"></view> 
+					<view class="raty-num">{{num}}</view>
+				</view>
+				<view class="raty-item">
+					<view  v-for="(item,index) in gradeItems" @click="setRaty(index)" :key="index" class="raty-yes"></view>
+				</view>
+			</view>
 			
-		</div>
-	</div>
+		</view>
+	</view>
 </template>
 
 <script>
 	export default{
+		 
 		props:{
 			len:0,
 			grade:0,
-			label:"",
+			label:'',
 			mod:0,
 			fields:"",
 			readonly:0
@@ -36,7 +37,13 @@
 				gclass: "mgb-10"
 			}
 		},
+		watch:{
+			num:function(n,o){
+				this.$emit("call-parent",n);
+			}
+		},
 		created:function(){
+			console.log(this.label) 
 			if (this.groupclass != undefined) {
 				this.gclass = this.groupclass;
 			}
@@ -89,6 +96,8 @@
 </script>
 
 <style>
-	 
+	.raty-num{
+		margin-left: 3px;
+	} 
 	 
 </style>

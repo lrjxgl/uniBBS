@@ -14,6 +14,12 @@
 					评论数
 					<text class="cl-num  mgl-5">{{item.comment_num}}</text>
 				</view>
+				<view v-if="item.admin" class="flex mgb-5 flex-ai-center">
+					<view class="cl-success f12 mgr-5">版主</view>
+					<view @click="goUser(a.userid)" v-for="(a,i) in item.admin" :key="i" class="f12 cl2 mgr-5">
+						{{a.nickname}}
+					</view>
+				</view>
 				<view class="flexlist-desc">{{item.description}}</view>
 			</view>
 
@@ -27,8 +33,7 @@
  
 
 <script>
-	var app = require("../../common/common.js");
-	import mtFooter from "../../components/forumfooter.vue";
+	import mtFooter from "../forumfooter.vue";
 	export default {
 		components: {
 			mtFooter
@@ -63,15 +68,20 @@
 		onPullDownRefresh:function(){
 			this.refresh();
 		} ,
-		 
+		onShareAppMessage:function(){
+			
+		},
+		onShareTimeline:function(){
+			
+		}, 
 		methods: {
 			getPage: function () {
 				var that = this;
-				uni.request({
-					url: app.apiHost + "/module.php?m=forum_group&ajax=1&fromapp=" + app.fromapp(),
-					success: function (data) {
+				that.app.get({
+					url: that.app.apiHost + "/forum_group/index?ajax=1",
+					success: function (res) {
 						that.pageLoad = true;
-						that.pageData = data.data.data;
+						that.pageData = res.data;
 						uni.hideNavigationBarLoading();
 					}
 				})
@@ -90,6 +100,11 @@
 			goForum: function (id) {
 				uni.navigateTo({
 					url: "../forum/show?id=" + id
+				})
+			},
+			goUser:function(userid){
+				uni.navigateTo({
+					url:"../forum_home/index?userid="+userid
 				})
 			}
 		},

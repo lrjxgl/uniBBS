@@ -26,15 +26,12 @@
 		methods:{
 			getPage:function(){
 				var that=this;
-				uni.request({
-					url:that.app.apiHost+"?m=user&a=user_head&ajax=1",
-					data:{
-						authcode: that.app.getAuthCode()
-					},
+				that.app.get({
+					url:that.app.apiHost+"/user/user_head?ajax=1",
 					success:function(res){
 						that.pageLoad=true;
-						that.pageData=res.data.data;
-						that.user_head=res.data.data.data.user_head; 
+						that.pageData=res.data;
+						that.user_head=res.data.data.user_head; 
 					}
 				})
 			},
@@ -44,21 +41,17 @@
 					success: (chooseImageRes) => {
 						const tempFilePaths = chooseImageRes.tempFilePaths;
 						uni.uploadFile({
-							url: that.app.apiHost+"?m=upload&a=img&ajax=1&authcode="+that.app.getAuthCode(), //仅为示例，非真实的接口地址
+							url: that.app.apiHost+"/upload/img?loginToken="+that.app.getToken(),
 							filePath: tempFilePaths[0],
 							name: 'upimg',
 							
 							success: function(res){
 								var data=JSON.parse(res.data);
 								
-								uni.request({
-									url:that.app.apiHost+"?m=user&a=user_head_save&ajax=1&authcode="+that.app.getAuthCode(),
+								that.app.post({
+									url:that.app.apiHost+"/user/user_head_save?",
 									data:{
 										user_head:data.data.imgurl
-									},
-									method:"POST",
-									header:{
-										"content-type":"application/x-www-form-urlencoded"
 									},
 									success:function(res){
 										that.user_head=data.data.trueimgurl;

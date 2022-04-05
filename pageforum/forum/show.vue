@@ -8,12 +8,12 @@
 				<view class="mgr-10 cl2">作者：{{pageData.author.nickname}}</view>
 				<view class="cl2">{{pageData.data.timeago}}</view>
 			</view>
-			<view class="d-content">
+			<view class="row-box">
 				<div v-if="pageData.data.videourl!=''" class="flex flex-center mgb-5">
 					<video :src="pageData.data.videourl" ></video>
 				</div>
 				<div class="flex-col flex-center mgb-5">
-					<image @longpress="downImg(item)" class="wmax mgb-5" mode="widthFix" v-for="(item,key) in pageData.imgslist" :key="key" :src="item"></image> 
+					<image style="width: 100%;" @longpress="downImg(item)" class="wmax mgb-5" mode="widthFix" v-for="(item,key) in pageData.imgslist" :key="key" :src="item"></image> 
 				</div>
 				
 			</view>
@@ -34,13 +34,13 @@
 		<!--评论-->
 		
 		<cmform tablename="mod_forum" :objectid="pageData.data.id"></cmform>
+		<navigator :url="'../forum/add?gid='+pageData.data.gid+'&catid='+pageData.data.catid" class="fixedAdd">发布</navigator>
 	</view>
 </template>
 
 <script>
-	import dUserbox from "../../components/d-userbox.vue";
+	import dUserbox from "../d-userbox.vue";
 	import cmform from "../../components/cmform.vue";
-	var app = require("../../common/common.js");
 	var id;
 	export default {
 		components: {
@@ -55,13 +55,23 @@
 			}
 			
 		},
-		onLoad: function (option) {
-			id = option.id;
+		onLoad: function (ops) {
+			 
+			 
+			if(ops.id!=undefined){
+				id=ops.id;
+			}
+			if(ops.scene!=undefined){
+				id=ops.scene.id;
+			}
 			this.getPage();
 			this.addClick();
 			
 		},
 		onShareAppMessage:function(){
+			
+		},
+		onShareTimeline:function(){
 			
 		},
 		onPullDownRefresh:function(){
@@ -75,8 +85,8 @@
 				},1000)
 			},
 			addClick:function(){
-				uni.request({
-					url: app.apiHost + "/module.php?fromapp=wxapp&m=forum&ajax=1&a=addclick&id=" + id,
+				this.app.get({
+					url: this.app.apiHost + "/forum/addclick?id=" + id,
 					success: function (res) {
 					}
 				})
@@ -100,37 +110,29 @@
 			},
 			getPage: function () {
 				var that = this;
-				uni.request({
-					url: app.apiHost + "/module.php?fromapp=wxapp&m=forum&ajax=1&a=show&id=" + id,
-					data:{
-						authcode:this.app.getAuthCode()
-					},
+				that.app.get({
+					url: that.app.apiHost + "/forum/show?id=" + id,
+					 
 					success: function (res) {
 						
 						that.pageLoad = true;
-						//res.data.data.data.content+='<style>img{max-width:100%;width:220px;height:auto;}</style>';
-						res.data.data.data.content=app.html(res.data.data.data.content);
-						 
-						that.pageData = res.data.data;
-
+						that.pageData = res.data;
+						uni.setNavigationBarTitle({
+							title:res.data.data.title
+						})
 					}
 				})
 			},
 			favToggle:function(id){
 				var that=this;
-				uni.request({
-					url:that.app.apiHost+"?fromapp=wxapp&m=fav&a=toggle&ajax=1",
+				that.app.get({
+					url:that.app.apiHost+"/fav/toggle",
 					data:{
 						objectid:id,
-						authcode:that.app.getAuthCode(),
 						tablename:"mod_forum"  
 					},
 					success:function(res){
-						if(res.data.error==1000){
-							that.app.goLogin();
-							return false;
-						}
-						if(res.data.data=='delete'){
+						if(res.data=='delete'){
 							that.pageData.isfav=false;
 						}else{
 							that.pageData.isfav=true;
@@ -141,21 +143,18 @@
 			},
 			loveToggle:function(id){
 				var that=this;
-				uni.request({
-					url:that.app.apiHost+"?m=love&a=toggle&ajax=1",
+				that.app.get({
+					url:that.app.apiHost+"/love/toggle",
 					data:{
-						
-						fromapp:that.app.fromapp(),
 						objectid:id,
-						authcode:that.app.getAuthCode(),
 						tablename:"mod_forum"
 					},
 					success:function(res){
-						if(res.data.error==1000){
+						if(res.error==1000){
 							that.app.goLogin();
 							return false;
 						}
-						if(res.data.data=='delete'){
+						if(res.data=='delete'){
 							that.pageData.islove=false;
 						}else{
 							that.pageData.islove=true;
@@ -168,5 +167,10 @@
 		},
 	}
 </script>
+<style>
+	.wmax{
+		width: 100%;
+	}
+</style>
 
  

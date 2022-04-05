@@ -1,22 +1,22 @@
 <template>
-	<div>
-		<div v-if="skyShareShow" @click="shareHide" class="modal-mask">{{skyShareShow}}</div>
+	<view>
+		<view v-if="skyShareShow" @click="shareHide" class="modal-mask">{{skyShareShow}}</view>
 		
-		<div v-if="skyShareShow" class="skyShare-box">
+		<view v-if="skyShareShow" class="skyShare-box">
 			<!-- #ifdef H5 -->
-			<div class="skyShare">点击右上角分享</div>
+			<view class="skyShare">点击右上角分享</view>
 			<!-- #endif -->
 			<!-- #ifdef APP-PLUS -->
-			<div class="skyShare">
-				<div @click="shareWeixin()" class="skyShare-item icon-weixin"><div class="skyShare-item-title">微信</div></div>
-				<div @click="shareWxzone()" class="skyShare-item icon-wxzone"><div class="skyShare-item-title">微信朋友圈</div></div>
-				<div @click="shareQQ()" class="skyShare-item icon-qq"><div class="skyShare-item-title">QQ</div></div>	
-			</div>
+			<view class="skyShare">
+				<view @click="shareWeixin()" class="skyShare-item icon-weixin"><view class="skyShare-item-title">微信</view></view>
+				<view @click="shareWxzone()" class="skyShare-item icon-wxzone"><view class="skyShare-item-title">微信朋友圈</view></view>
+				<view @click="shareQQ()" class="skyShare-item icon-qq"><view class="skyShare-item-title">QQ</view></view>	
+			</view>
 			<!-- #endif -->
-			<div @click="shareHide" class="skyShare-footer">取消</div>
-		</div>
+			<view @click="shareHide" class="skyShare-footer">取消</view>
+		</view>
 		 
-	</div>
+	</view>
 </template>
 
 <script>
@@ -125,14 +125,14 @@
 <style>
 	.skyShare-box{
 		position: fixed;
-		left: 10px;
-		right:10px;
-		bottom:10px;
+		left: 0px;
+		right:0px;
+		bottom:0px;
 		background-color: #fff;
 		z-index: 9999;
 	}
 	.skyShare{
-		padding: 44px; 
+		padding: 44rpx; 
 		border-bottom: 2px solid #eee;
 		display: flex;
 		flex-direction: row;
@@ -148,11 +148,11 @@
 	}
 	.skyShare-item:before{
 		font-family: iconfont;
-		font-size: 72px;
-		margin-bottom: 12px;
+		font-size: 72rpx;
+		margin-bottom: 12rpx;
 	}
 	.skyShare-item-title{
-		font-size: 24px;
+		font-size: 24rpx;
 		color: #323232;
 	}
 	.icon-weixin,.icon-wxzone{
@@ -164,9 +164,9 @@
 	}
 	.skyShare-footer{
 		text-align: center;
-		padding: 22px 0px;
+		padding: 12px 0px;
 		color: #464646;
-		font-size: 34px;
+		font-size: 16px;
 		cursor: pointer;
 		
 	}

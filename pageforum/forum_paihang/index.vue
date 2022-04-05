@@ -6,7 +6,9 @@
 				<div @click="tab='b'" :class="tab=='b'?'tabs-border-active':''" class="tabs-border-item">名人榜</div>
 				
 			</div>
-			<div :class="tab=='a'?'tabs-border-box-active':''"  class="row-box tabs-border-box">
+			<div v-if="tab=='a'" >
+				<view v-if="wzList.length==0" class="emptyData">暂无</view>
+				<view v-else>
 				<view @click="goForum(item.id)" class="flist-item" v-for="(item,fkey) in wzList" :key="fkey">
 					<view class="flist-user">
 						<image :src="item.user_head+'.100x100.jpg'" class="flist-head"></image>
@@ -32,9 +34,9 @@
 							{{item.view_num}} </view>
 					</view>
 				</view> 
-				 
+				</view> 
 			</div>
-			<div  @click="goUser(item.userid)" :class="tab=='b'?'tabs-border-box-active':''"  class="row-box tabs-border-box">
+			<div  v-if="tab=='b'" class="row-box">
 				<div class="flex mgb-10">
 					<div class="td-a fwb">排行</div>
 					<div class="td-b fwb">头像</div>
@@ -43,14 +45,14 @@
 					<div class="td-d fwb">积分</div>
 				</div>
 				 
-				<div v-for="(item,index) in fsList" :key="index" class="flex flex-ai-center mgb-10">
+				<div  @click="goUser(item.userid)"  v-for="(item,index) in fsList" :key="index" class="flex flex-ai-center mgb-10">
 					<div class="td-a cl-num">{{index+1}}</div>
 					<div class="td-b">
 						<image mode="widthFix" class="rdImg" :src="item.user_head+'.100x100.jpg'" ></image>
 					</div>
 					<div class="td-c">{{item.nickname}}</div>
 					<div class="flex-1"></div>
-					<div class="td-d cl-num">{{item.num}}</div>
+					<div class="td-d cl-num">{{item.followed_num}}</div>
 				</div>
 				 
 			</div>
@@ -84,7 +86,7 @@
 			getPage: function() {
 				let that=this;
 				that.app.get({
-					url:that.app.apiHost+"/module.php?m=forum_paihang&ajax=1",
+					url:that.app.apiHost+"/forum_paihang/index?ajax=1",
 					success:function(res){
 						that.wzList=res.data.wzList;
 						that.fsList=res.data.fsList;
@@ -96,6 +98,7 @@
 	}
 </script>
 <style>
+	@import url("../forum.css");
 	.fwb {
 		font-weight: 600;
 	}

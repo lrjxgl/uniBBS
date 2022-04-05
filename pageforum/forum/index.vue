@@ -5,84 +5,68 @@
 		</div>
 		<div v-if="pageLoad">
 			<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000">
-				<swiper-item v-for="(item,key) in pageData.flashList" :key="key">
+				<swiper-item v-for="(item,key) in flashList" :key="key">
 					<view class="swiper-item">
 						<image @click="gourl(item.link1)" :src="item.imgurl" style="width:100%" mode="widthFix"></image>
 					</view>
 				</swiper-item>
 			
 			</swiper>
-			<div class="row-box-hd">
-				<div class="flex-1 mgl-10 f16">推荐版块</div>
-				<navigator url="../forum_group/index" class="row-box-more">更多</navigator>
+			<view v-if="Object.keys(navList).length>0" class="m-navPic mgb-5">
+			     
+			    <navigator v-for="(item,index) in navList" :key="index" :url="item.link1" class="m-navPic-item">
+					  <image mode="widthFix" class="m-navPic-img" :src="item.imgurl" ></image>
+					  <view class="m-navPic-title">{{item.title}}</view>				   
+			    </navigator>		
+			   
+			</view> 
+			<div :style="tabClass" class="tabNav">
+				<div @click="gourl('/pageforum/forum/index')" gourl="/module.php/forum/index?" class="tabNav-item tabNav-item-active">推荐</div>
+				<div @click="gourl('/pageforum/forum/new')"  class="tabNav-item">最新</div>
+				<div @click="gourl('/pageforum/forum_feeds/index')"  class="tabNav-item">关注</div>
+				<div @click="gourl('/pageforum/forum_paihang/index')"  class="tabNav-item">名人榜</div>
 			</div>
-			<div class="flexlist">
-				<div class="flexlist-item bg-fff" v-for="(item,key) in pageData.grouplist" :key="key">
-					<navigator class="flexlist-imgbox" :url="'../forum/list?gid='+item.gid">
-						<img class="flexlist-img" :src="item.imgurl+'.100x100.jpg'">
-					</navigator>
-					<div class="flex-1">
-						<navigator class="flexlist-title" :url="'../forum/list?gid='+item.gid">{{item.title}}</navigator>
-						<div class="flexlist-row">
-							主题数
-							<text class="cl-num mgl-5 mgr-10">{{item.topic_num}}</text>
-
-							评论数
-							<text class="cl-num  mgl-5">{{item.comment_num}}</text>
-						</div>
-						<div class="flexlist-desc">{{item.description}}</div>
-					</div>
-
-				</div>
-
-			</div>
-			<div class="row-box-hd">
-				<div class="flex-1 mgl-10 f16">推荐帖子</div>
-
-			</div>
-			<div class="flist">
-				<div @click="goForum(item.id)" class="flist-item" v-for="(item,fkey) in pageData.list" :key="fkey">
-					<div class="flist-user">
-						<image :src="item.user_head+'.100x100.jpg'" class="flist-head"></image>
-						<div class="flex-1">
-							<div class="flist-nick">{{item.nickname}}</div>
-							<div class="flist-time">{{item.timeago}}</div>
-						</div>
-					</div>
-					<div class="flist-title">{{item.title}}</div>
-
-					<div class="flist-vd" v-if="item.videourl">
-						<image class="flist-vd-bg" :src="item.videoimg"></image>
-						<div class="flist-vd-play"></div>
-					</div>
-
-					 
-					<div class="flist-imgs" v-if="item.imgslist">
-						<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="flist-imgs-img"
-						 mode="widthFix"></image>
-					</div>
-
-					<div class="flex flist-ft">
-						<div class="flist-ft-love">
-							{{item.love_num}} </div>
-						<div class="flist-ft-cm">
-							{{item.comment_num}} </div>
-						<div class="flist-ft-view">
-							{{item.view_num}} </div>
-					</div>
-				</div>
+			<div class="sglist">
+				<view  class="sglist-item" v-for="(item,fkey) in  list" :key="fkey">
+					<view @click="goUser(item.userid)"  class="flex mgb-5">
+						<image :src="item.user_head+'.100x100.jpg'" class="wh-40 mgr-5 bd-radius-50"></image>
+						<view class="flex-1">
+							<view class="f14 mgb-5">{{item.nickname}}</view>
+							<view class="f12 cl3">{{item.timeago}}</view>
+						</view>
+					</view>
+					<div @click="goForum(item.id)" class="flex mgb-5">
+						<div v-if="item.videourl" class="iconfont cl-red mgr-5 icon-video"></div>
+						<div class="flex-1">{{item.title}}</div>
+					</div>		
+					<view @click="goForum(item.id)" class="sglist-imglist" v-if="item.imgslist">                   
+						<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="sglist-imglist-img"  mode="widthFix" ></image>
+					</view>
+					
+					<view class="flex sglist-ft">
+						<view class="sglist-ft-love">
+							{{item.love_num}} </view>
+						<view class="sglist-ft-cm">
+							{{item.comment_num}} </view>
+						<view class="sglist-ft-view">
+							{{item.view_num}} </view>
+					</view>
+				</view>
 
 			</div>
 		</div>
 		<forum-footer tab="home"></forum-footer>
+		<!-- #ifdef H5 -->
+		<navigator url="../../pages/index/index" open-type="reLaunch" class="fixToHome iconfont icon-back"></navigator>
+		<!-- #endif -->
+		<go-top></go-top>
 	</div>
 </template>
 
 <script>
 	import forumFooter from "../../components/forumfooter.vue";
-	var app = require("../../common/common.js");
-	var per_page = 0;
-	var isfirst = true;
+ 
+ 
 	var gid = 0;
 	var activeClass = "tabs-border-active";
 	export default {
@@ -94,7 +78,14 @@
 				defaultActive: "tabs-border-active",
 				pageLoad: false,
 				pageHide: false,
-				pageData: {},
+				list: [],
+				isFirst:true,
+				per_page:0,
+				adList:[],
+				navList:[],
+				flashList:[],
+				tabClass:"",
+				swiperHeight: 200,
 			}
 
 		},
@@ -102,16 +93,38 @@
 			uni.setNavigationBarTitle({
 				title: '福鼎论坛'
 			});
+			var sys=uni.getSystemInfoSync();
+			this.swiperHeight=sys.windowWidth/2;
 			this.getPage();
 		},
 
-
+		onShareAppMessage:function(){
+			
+		},
+		onShareTimeline:function(){
+			
+		},
 		onReachBottom: function() {
 			this.getList();
 		},
 		onPullDownRefresh: function() {
 			this.refresh();
+			
 		},
+		onPageScroll:function(e){
+				if(e.scrollTop>this.swiperHeight+60){
+					// #ifdef H5
+					this.tabClass="position: fixed;left:0;right:0;top:44px;";
+					// #endif
+					//#ifndef H5
+					this.tabClass="position: fixed;left:0;right:0;top:0px;";
+					// #endif
+					
+				}else{
+					this.tabClass="";
+				}
+				
+			},
 		methods: {
 			gourl:function(url){
 				uni.navigateTo({
@@ -121,7 +134,7 @@
 			getPage: function() {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/module.php?m=forum&ajax=1",
+					url: that.app.apiHost + "/forum/index?ajax=1",
 					
 					success: function(res) {
 						//登录
@@ -130,66 +143,49 @@
 								url: "/pages/login/index",
 							})
 						} else {
-							isfirst = false;
+							that.isFirst = false;
+							that.flashList=res.data.flashList;
 							that.pageLoad = true;
-							that.pageData = res.data;
-							per_page = res.data.per_page;
+							that.navList = res.data.navList;
+							that.per_page = res.data.per_page;
+							that.list=res.data.list;
 						}
 
 					}
 				})
 			},
-			setGroup: function(cid) {
-				gid = cid;
-				isfirst = true;
-				per_page = 0;
-				if (gid == 0) {
-					this.defaultActive = activeClass;
-				} else {
-					this.defaultActive = "";
-				}
-				var grouplist = this.pageData.grouplist;
-				for (var i in grouplist) {
-					if (grouplist[i].gid == gid) {
-						grouplist[i].isactive = 1;
-					} else {
-						grouplist[i].isactive = 0;
-					}
-				}
-				this.pageData.grouplist = grouplist;
-				this.getList();
-			},
+			 
 			getList: function() {
 				var that = this;
-				if (!isfirst && per_page == 0) return false;
-				uni.request({
-					url: app.apiHost + "/module.php?m=forum&ajax=1",
+				if (!that.isFirst && that.per_page == 0) return false;
+				that.app.get({
+					url: that.app.apiHost + "/forum/index?ajax=1",
 					data: {
-						per_page: per_page,
-						gid: gid,
-						authcode: app.getAuthCode()
+						per_page: that.per_page,
 					},
 					success: function(res) {
-
-						if (!res.data.error) {
-							if (isfirst) {
-								that.pageData.list = res.data.data.list;
-								isfirst = false;
-							} else {
-
-								that.pageData.list = app.json_add(that.pageData.list, res.data.data.list);
+						if(!res.error){
+							if(that.isFirst){
+								that.isFirst=false;
+								that.list=res.data.list;
+							}else{
+								for(var i in res.data.list){
+									that.list.push(res.data.list[i])
+								}
 							}
-							per_page = res.data.data.per_page;
-
+							that.per_page=res.data.per_page;
 						}
-
-
 					}
 				})
 			},
 			goForum: function(id) {
 				uni.navigateTo({
-					url: "../forum/show?id=" + id
+					url: "/pageforum/forum/show?id=" + id
+				})
+			},
+			goUser: function(userid) {
+				uni.navigateTo({
+					url: "/pageforum/forum_home/index?userid=" + userid
 				})
 			},
 			refresh: function() {
@@ -206,7 +202,30 @@
 </script>
 
 <style>
+ 
 swiper{
-		height: 440upx;
+		height: 380rpx;
+	}
+	.tabNav{
+		padding: 10px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		background-color: #fff;
+		border-bottom: 1px solid #eee;
+		background-color: #ff;
+		z-index: 999;
+		position: relative;
+	}
+	.tabNav-item{
+		cursor: pointer;
+		margin-right: 40px;
+		font-weight: 600;
+	}
+	.tabNav-item-active{
+		color: #f60;
+		padding-bottom: 3px;
+	 
 	}
 </style>

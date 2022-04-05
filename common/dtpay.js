@@ -1,8 +1,8 @@
 module.exports={
 	apiHost:"https://www.fd175.com/",
 	appRoot:"https://www.fd175.com/uniapp/h5/", 
-	urlSuccess:"../b2c_order/success",
-	urlFail:"../b2c_order/fail",
+	urlSuccess:"../flk_order/success",
+	urlFail:"../flk_order/fail",
 	paytype:"alipay",
 	pay:function(ops){
 		var that=this;
@@ -29,14 +29,14 @@ module.exports={
 					'paySign': res.data.paySign,
 					success: function (res) {
 						
-						uni.redirectTo({
+						uni.reLaunch({
 							url:that.urlSuccess
 						})
 						
 					},
 					fail: function (res) {
 						
-						uni.redirectTo({
+						uni.reLaunch({
 							url:that.urlFail
 						}) 
 					} 
@@ -63,7 +63,7 @@ module.exports={
 					provider: that.paytype,
 					orderInfo: orderInfo, //微信、支付宝订单数据
 					success: function (res) {
-						uni.redirectTo({
+						uni.reLaunch({
 							url:that.urlSuccess
 						})
 					},

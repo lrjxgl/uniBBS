@@ -1,10 +1,11 @@
 <template>
 	<view>
 		<div v-if="pageLoad">
-			<div class="sglist">
+			<div v-if="list.length==0" class="emptyData">暂无收藏</div>
+			<div v-else class="sglist">
 				<div @click="goDetail(item.id)" class="sglist-item" v-for="(item,index) in list" :key="index">
 					<div class="flex mgb-5">
-						<img :src="item.user_head+'.100x100.jpg'" class="wh-40 bd-radius-50" />
+						<image mode="widthFix" :src="item.user_head+'.100x100.jpg'" class="wh-40 bd-radius-50" />
 						<div class="flex-1 mgl-5">
 							<div class="f14 fw-600 mgb-5">{{item.nickname}}</div>
 							<div class="flex">
@@ -61,7 +62,7 @@
 			getPage: function() {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/module.php?m=forum_fav&a=mylist&tablename=" + tablename + "&ajax=1",
+					url: that.app.apiHost + "/forum_fav/mylist?tablename=" + tablename + "&ajax=1",
 					success: function(res) {
 						that.pageLoad = true;
 						that.list = res.data.list;
@@ -75,7 +76,7 @@
 					return false;
 				}
 				that.app.get({
-					url: that.app.apiHost + "/module.php?m=forum_fav&a=mylist&tablename=" + tablename + "&ajax=1",
+					url: that.app.apiHost + "/forum_fav/mylist?tablename=" + tablename + "&ajax=1",
 					data: {
 						per_page: that.per_page
 					},

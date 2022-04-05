@@ -11,10 +11,14 @@
 				<div class="uBox-nick">{{user.nickname}}</div>
 			</div>
 			<div class="flex mgb-10 flex-center">
-				<div class="mgr-5 cl-white">粉丝</div>
-				<div class="mgr-10  cl-white">{{user.followed_num}}</div> 
-				<div class="mgr-5  cl-white">关注</div>
-				<div class="cl-white">{{user.follow_num}}</div>
+				<div @click="gourl('../../pages/follow/index?tab=followed&userid='+user.userid)" class="flex flex-ai-center">
+					<div class="mgr-5 cl-white">粉丝</div>
+					<div class="mgr-10  cl-white">{{user.followed_num}}</div> 
+				</div>
+				<div  @click="gourl('../../pages/follow/index?userid='+user.userid)" class="flex flex-ai-center">
+					<div class="mgr-5  cl-white">关注</div>
+					<div class="cl-white">{{user.follow_num}}</div>
+				</div>
 				<div class="btn-pm  cl-white" @click="goPm(user.userid)">私信</div>
 			</div>
 			<div v-if="user.description==''" class="uBox-desc">该用户一句话也没留下</div>
@@ -32,7 +36,7 @@
 			<div class="sglist-ft">
 				<div class="sglist-ft-love">{{item.love_num}}</div>
 				<div class="sglist-ft-cm">{{item.comment_num}}</div>
-				<div class="sglist-ft-div">{{item.view_num}}</div>
+				<div class="sglist-ft-view">{{item.view_num}}</div>
 			</div> 
 		</div>
 	</div>
@@ -54,6 +58,11 @@
 			this.getPage();
 		},
 		methods:{
+			gourl:function(url){
+				uni.navigateTo({
+					url:url
+				})
+			},
 			goPm:function(userid){
 				uni.navigateTo({
 					url:"../../pages/pm/detail?userid="+userid
@@ -69,7 +78,7 @@
 			getPage:function(){
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/module.php?m=forum_home&a=api&ajax=1",
+					url:that.app.apiHost+"/forum_home/api?ajax=1",
 					data:{
 						userid:this.userid
 					},
@@ -85,7 +94,7 @@
 			toggleFollow:function(item){
 				var that=this;
 				that.app.get({
-					url: that.app.apiHost+"/index.php?m=follow&a=Toggle&ajax=1",
+					url: that.app.apiHost+"/follow/Toggle?ajax=1",
 					dataType: "json",
 					data: {
 						t_userid: item.userid
@@ -105,7 +114,7 @@
 </script>
 
 <style>
-	 
+ 
 	
 	.uBox {
 		position: relative;
