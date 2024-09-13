@@ -8,7 +8,11 @@
 				<img class="uBox-head" :src="user.user_head+'.100x100.jpg'"> 
 			</div>
 			<div class="flex flex-center">
-				<div class="uBox-nick">{{user.nickname}}</div>
+				<div class="flex flex-ai-center mgb-10">
+					<div class="mgr-10 cl-white">{{user.nickname}}</div>
+					<image mode="widthFix" class="rankLogo" :src="rank.logo"></image>
+				</div>
+				
 			</div>
 			<div class="flex mgb-10 flex-center">
 				<div @click="gourl('../../pages/follow/index?tab=followed&userid='+user.userid)" class="flex flex-ai-center">
@@ -19,26 +23,30 @@
 					<div class="mgr-5  cl-white">关注</div>
 					<div class="cl-white">{{user.follow_num}}</div>
 				</div>
-				<div class="btn-pm  cl-white" @click="goPm(user.userid)">私信</div>
+				<!--<div class="btn-pm  cl-white" @click="goPm(user.userid)">私信</div>-->
 			</div>
 			<div v-if="user.description==''" class="uBox-desc">该用户一句话也没留下</div>
 			<div v-else class="uBox-desc">{{user.description}}</div>
 		</div>
 		<div class="emptyData" v-if="!list || Object.keys(list).length==0">暂无帖子</div>
-		<div v-for="(item,index) in list" :key="index" @click="goBlog(item.id)" class="sglist-item">
-			<div class="sglist-title">{{item.title}}</div>
-			<div class="sglist-desc">{{item.description}}</div>
-			<div v-if="item.imgslist" class="sglist-imglist">
-				 
-				<img v-for="(cc,ii) in item.imgslist" :key="ii" :src="cc+'.100x100.jpg'" class="sglist-imglist-img" />
-				 
+		<div class="sglist">
+			<div v-for="(item,index) in list" :key="index" @click="goBlog(item.id)" class="sglist-item">
+				<div class="sglist-title">{{item.title}}</div>
+				<div class="sglist-desc">{{item.description}}</div>
+				<div v-if="item.imgslist" class="sglist-imglist">
+					 
+					<img v-for="(cc,ii) in item.imgslist" :key="ii" :src="cc+'.100x100.jpg'" class="sglist-imglist-img" />
+					 
+				</div>
+				<div class="sglist-ft">
+					<div class="sglist-ft-love">{{item.love_num}}</div>
+					<div class="sglist-ft-cm">{{item.comment_num}}</div>
+					<div class="sglist-ft-view">{{item.view_num}}</div>
+				</div> 
 			</div>
-			<div class="sglist-ft">
-				<div class="sglist-ft-love">{{item.love_num}}</div>
-				<div class="sglist-ft-cm">{{item.comment_num}}</div>
-				<div class="sglist-ft-view">{{item.view_num}}</div>
-			</div> 
+			<div class="loadMore" @click="getList()" v-if="per_page>0">加载更多</div>
 		</div>
+		
 	</div>
 </template>
 
@@ -47,10 +55,13 @@
 	 
 		data:function(){
 			return {
+				isFirst:true,
+				per_page:0,
 				list:[],
 				pageLoad:false,
 				user:{},
-				userid:0 
+				userid:0 ,
+				rank:{}
 			}
 		},
 		onLoad:function(ops){
@@ -78,7 +89,7 @@
 			getPage:function(){
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/forum_home/api?ajax=1",
+					url:that.app.apiHost + "/mm/forum_home/api?ajax=1",
 					data:{
 						userid:this.userid
 					},
@@ -87,14 +98,44 @@
 						that.pageLoad=true;
 						that.list=res.data.list;
 						that.user=res.data.user;
+						that.per_page=res.data.per_page;
+						that.isFirst=false;
+						that.rank=res.data.rank;
 					}
 				})
 			},
-	 
+			 getList:function(){
+				var that=this;
+				if(that.per_page==0 && !that.isFirst){
+					return false;
+				}
+				that.app.get({
+					url:that.app.apiHost + "/mm/forum_home/api?ajax=1",
+					data:{
+						userid:this.userid,
+						per_page:that.per_page
+					},
+					dataType:"json",
+					success:function(res){
+						that.pageLoad=true;
+						if(that.isFirst){
+							that.list=res.data.list;
+							that.isFirst=false;
+						}else{
+							for(var i in res.data.list){
+								that.list.push(res.data.list[i])
+							}
+						}
+
+						that.per_page=res.data.per_page;
+						
+					}
+				})
+			 },
 			toggleFollow:function(item){
 				var that=this;
 				that.app.get({
-					url: that.app.apiHost+"/follow/Toggle?ajax=1",
+					url: that.app.apiHost+"/index/follow/Toggle?ajax=1",
 					dataType: "json",
 					data: {
 						t_userid: item.userid
@@ -120,7 +161,7 @@
 		position: relative;
 		width: 100%;
 		height: 400rpx;
-		background-color: #009688;
+		background-color: #007b47;
 	
 	}
 	

@@ -22,13 +22,17 @@
 						<view class="input-flex-label flex-1">内容</view>
 						<textarea name="content" class="h100 textarea-flex-text" :value="pageData.data.content"></textarea>
 					</view>
+					<!-- #ifdef H5 -->
+					
+					
 					<div class="tabs-border">
 						<div :class="tab==''?'tabs-border-active':''" @click="tab=''" class="tabs-border-item">图片</div>
 						<div @click="tab='video'"  :class="tab=='video'?'tabs-border-active':''"   class="tabs-border-item">视频</div>
 					</div>
+					<!-- #endif -->
 					<div :class="tab=='video'?'none':''">
 						<input maxlength="-1" type="text" class="none" name="imgsdata" :value="imgsData" />
-						<upimg-box @call-parent="callImgsData" :defaultImgsList="pageData.imgsdata" :defaultImgsData="imgsData" name="imgsdata"></upimg-box>
+						<upimg-box md="forum" @call-parent="callImgsData" :defaultImgsList="pageData.imgsdata" :defaultImgsData="imgsData" name="imgsdata"></upimg-box>
 					</div>
 					<div  :class="tab==''?'none':''">
 						<input  maxlength="-1" type="text" class="none" name="videourl" :value="mp4url" />
@@ -91,7 +95,7 @@
 			getPage: function () {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/forum/index?a=add",
+					url: that.app.apiHost + "/mm/forum/index?a=add",
 					data:{
 						id:id
 					},
@@ -109,7 +113,7 @@
 			formSubmit:function(e){
 				var that=this;
 				that.app.post({
-					url:that.app.apiHost+"/forum/save?ajax=1",
+					url:that.app.apiHost + "/mm/forum//save?ajax=1",
 					data:e.detail.value,
 					
 					success:function(res){

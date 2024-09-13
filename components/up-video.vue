@@ -6,15 +6,17 @@
 			<view @click="upload()"  class="upimg-btn">
 				<view class="upimg-btn-icon"></view>
 			</view>
-			<view v-if="videoProgress>0 && videoProgress<100">{{videoProgress}}%</view>
+			<div class="flex-1">
+				<view v-if="videoProgress>0 && videoProgress<100">{{videoProgress}}%</view>
+				<video style="width: 180px;" v-if="truemp4url!='' " :src="truemp4url"></video> 
+			</div>
+			
 			 
 			
 			
 			<input style="display: none;" type="file" name="upimg" id="upimg" />
 		</view>
-		<view>
-			<video style="width: 90%;" v-if="truemp4url!='' " :src="truemp4url"></video> 
-		</view>	
+		 
 	</view>
 </template>
 
@@ -23,9 +25,9 @@
 	export default{
 		 
 		props:{
-			dMp4url:String,
-			dTrueMp4url:String,
-			iField:String
+			dMp4url:'',
+			dTrueMp4url:'',
+			iField:''
 		},
 		data:function(){
 			return {
@@ -36,10 +38,16 @@
 		},
 		created:function(){
 			that=this;
-			this.mp4url="";//this.dMp4url;
-			this.truemp4url=this.dTrueMp4url;
+			this.mp4url="";
+			
+			if(this.dTrueMp4url===true){
+				this.truemp4url=""
+			}else{
+				this.truemp4url=this.dTrueMp4url;
+			}
+			
 			 
-			//console.log(typeof(this.truemp4url))
+			console.log(this.truemp4url)
 		},
 		methods: {
 			 
@@ -52,7 +60,7 @@
 						that.videoProgress=1;
 						var tempFilePath = ress.tempFilePath;
 						uni.request({
-							url:that.app.apiHost+"/ossupload/auth",
+							url:that.app.apiHost+"/index.php?m=ossupload&a=auth&ajax=1",
 							method:"GET",
 							data:{
 								loginToken:that.app.getToken(),
@@ -67,6 +75,7 @@
 									Signature:oos.sign,
 									key:oos.key + ".mp4",
 									callback:oos.callback
+									
 								};
 								 
 								var uploadTask=uni.uploadFile({
@@ -76,6 +85,12 @@
 									formData:fdata,
 									success: (res)=>{
 										var data=JSON.parse(res.data);
+										if(data.Status=='fail'){
+											uni.showToast({
+												title:"上传出错"
+											})
+											return false;
+										}
 										console.log(data);
 										 
 										that.$emit("call-parent",data.filename);

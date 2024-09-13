@@ -1,58 +1,54 @@
 <template>
 	<view v-if="pageLoad">
-		<view class="tabs-border">
+		<view v-if="catList.length>0" class="tabs-border">
 			<view  @click="setCat(0)" class="tabs-border-item" :class="0==catid?'tabs-border-active':''">推荐</view>
 			<view @click="setCat(item.catid)" :class="item.catid==catid?'tabs-border-active':''" v-for="(item,key) in catList" :key="key" class="tabs-border-item">{{item.title}}</view>
 			
 		</view>
-		<view class="sglist">
-			<view class="emptyData" v-if="Object.keys(list).length==0">暂无帖子</view>
-			<view  class="sglist-item" v-for="(item,fkey) in list" :key="fkey">
-				<view @click="goUser(item.userid)"  class="flex mgb-5">
-					<image :src="item.user_head+'.100x100.jpg'" class="wh-40 mgr-5 bd-radius-50"></image>
-					<view class="flex-1">
-						<view class="f14 mgb-5">{{item.nickname}}</view>
-						<view class="f12 cl3">{{item.timeago}}</view>
-					</view>
+		<swiper v-if="flashList.length>0" :style="{height:swiperHeight+'px'}" :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000">
+			<swiper-item v-for="(item,key) in flashList" :key="key">
+				<view class="swiper-item">
+					<image @click="gourl(item.link1)" :src="item.imgurl" style="width:100%" mode="widthFix"></image>
 				</view>
-				<div @click="goForum(item.id)" class="flex mgb-5">
-					<div v-if="item.videourl" class="iconfont cl-red mgr-5 icon-video"></div>
-					<div class="flex-1">{{item.title}}</div>
-				</div>		
-				<view @click="goForum(item.id)" class="sglist-imglist" v-if="item.imgslist">                   
-					<image v-for="(img,imgIndex) in item.imgslist" :key="imgIndex" :src="img+'.100x100.jpg'" class="sglist-imglist-img"  mode="widthFix" ></image>
-				</view>
-				
-				<view class="flex sglist-ft">
-					<view class="sglist-ft-love">
-						{{item.love_num}} </view>
-					<view class="sglist-ft-cm">
-						{{item.comment_num}} </view>
-					<view class="sglist-ft-view">
-						{{item.view_num}} </view>
-				</view>
-			</view>
+			</swiper-item>
+		
+		</swiper>
+		<view v-if="recList.length>0">
+			<div class="fw-600 bd-mp-10 pd-10 f16">板块推荐</div>
+			<forum-list class="row-box" :dataList="recList"></forum-list>
+		</view>
+		<div v-if="list.length==0 && recList.length==0" class="emptyData">暂无帖子</div>
+		<view v-if="list.length>0">
+			<div class="fw-600 bd-mp-10 pd-10 f16">最新帖子</div>
+			 
+			<forum-list class="row-box" :dataList="list"></forum-list>
 			
 		</view>
 		<go-top></go-top>
-		<navigator :url="'../forum/add?gid='+gid+'&catid='+catid" class="fixedAdd">发布</navigator>
+		<navigator style="bottom:200px;" :url="'../forum/add?gid='+gid+'&catid='+catid" class="fixedAdd2"></navigator>
 	</view> 
 </template>
 
 <script> 
+	import forumList from "@/components/forum/forum-list.vue"
 	export default{
-	
+		components:{
+			forumList
+		},
 		data:function(){
 			return {
 				pageLoad:false, 
 				pageHide:false,
 				gid:0,
 				catid:0,
+				recList:[],
 				list:[],
 				catList:[],
 				isFirst:true,
 				per_page:0,
-				group:{}
+				group:{},
+				flashList:[],
+				swiperHeight: 200,
 			}
 			
 		},
@@ -63,6 +59,8 @@
 			if(ops.gid!=undefined){
 				this.gid=ops.gid;
 			}
+			var sys=uni.getSystemInfoSync();
+			this.swiperHeight=sys.windowWidth/2;
 			this.getPage();
 		},
 		 
@@ -87,7 +85,7 @@
 			getPage:function(){
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/forum/list?ajax=1",
+					url:that.app.apiHost + "/mm/forum/list?ajax=1",
 					data:{
 						gid:this.gid,
 						catid:this.catid
@@ -104,8 +102,10 @@
 							that.isFirst=false;
 							that.pageLoad=true;
 							that.list=res.data.list;
+							console.log(that.list)
 							that.per_page=res.data.per_page;
-							 
+							that.recList=res.data.recList; 
+							that.flashList=res.data.flashList;
 							uni.setNavigationBarTitle({
 								title: res.data.group.title
 							});
@@ -124,7 +124,7 @@
 				var that=this;
 				if(!that.isFirst && that.per_page==0) return false;
 				that.app.get({
-					url:that.app.apiHost+"/forum/list?ajax=1",
+					url:that.app.apiHost + "/mm/forum/list?ajax=1",
 					data:{
 						per_page:that.per_page,
 						catid:that.catid,
@@ -134,11 +134,14 @@
 						if(res.error){
 							return false;
 						}
+						
 						that.per_page=res.data.per_page; 
 						if(that.isFirst){
 							that.list=res.data.list;
+							that.recList=res.data.recList;
 							that.isFirst=false;
 						}else{
+							 
 							for(var i in res.data.list){
 								that.list.push(res.data.list[i])
 							}

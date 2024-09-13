@@ -59,7 +59,7 @@
 			getPage: function () {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/user_address/add?id=" + id,
+					url: that.app.apiHost + "/index/user_address/add?id=" + id,
 					success: function (res) {
 						that.pageLoad = true;
 						that.pageData = res.data;
@@ -70,12 +70,13 @@
 			formSubmit: function (e) {
 				var that=this;
 				that.app.post({
-					url: that.app.apiHost + "/user_address/save?",
+					url: that.app.apiHost + "/index/user_address/save",
 		
 					data: e.detail.value,
 					success: function (res) {
 						uni.showToast({
-							"title":res.message
+							"title":res.message,
+							icon:"none"
 						})
 						if(!res.error){
 							setTimeout(function(){

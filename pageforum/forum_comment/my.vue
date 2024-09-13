@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<div v-if="list.length==0" class="emptyData">暂无评论</div>
 		<div class="sglist">
 			<div v-for="(item,index) in list" :key="index" class="sglist-item">
 				<div class="f14">
@@ -49,8 +50,15 @@
 			getPage: function() {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/comment/my?tablename=" + tablename + "&ajax=1",
+					url: that.app.apiHost + "/index/comment/my?tablename=" + tablename + "&ajax=1",
+					unLogin:true,
 					success: function(res) {
+						if(res.error){
+							if(res.error==1000){
+								that.app.showLoginBox(true)
+							}
+							return false;
+						}
 						that.pageLoad = true;
 						that.list = res.data.list;
 						that.per_page = res.data.per_page;
@@ -63,7 +71,7 @@
 					return false;
 				}
 				that.app.get({
-					url: that.app.apiHost + "/comment/my?tablename=" + tablename + "&ajax=1",
+					url: that.app.apiHost + "/index/comment/my?tablename=" + tablename + "&ajax=1",
 					data: {
 						per_page: that.per_page
 					},
@@ -90,7 +98,7 @@
 				    success: function (res) {
 				        if (res.confirm) {
 				            that.app.get({
-				            	url: that.app.apiHost + "/comment/delete?tablename=" + tablename + "&id=" + id,
+				            	url: that.app.apiHost + "/index/comment/delete?tablename=" + tablename + "&id=" + id,
 				            	dataType: "json",
 				            	success: function(res) {
 				            		var list = that.list;

@@ -1,14 +1,12 @@
 <template>
 	<view v-if="pageLoad">
-		<view v-if="unLogin" class="mgb-5">
-			<un-login></un-login>
-		</view>
-		<view v-else>
+
+		<view>
 			<view class="emptyData" v-if="Object.keys(list).length==0">暂无消息</view>
 			<view v-else class="pmList">
 				<view @click="goPm(item.t_userid)" class="row-box mgb-5" v-for="(item,index) in list" :key="index">
 					<view class="flex flex-ai-center" v-if="item.isme">
-						<image class="pm-head mgr-5" :src="item.t_user_head+'.100x100.jpg'" mode="widthFix" ></image>
+						<image class="pm-head mgr-5" :src="item.t_user_head+'.100x100.jpg'" mode="widthFix"></image>
 						<div class="flex-1">
 							<div class="flex mgb-5">
 								<text v-if="item.status==0" class="badge badge-mini"></text>
@@ -46,34 +44,33 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<mt-footer tab="pm"></mt-footer>
 	</view>
 </template>
 
 <script>
-	import mtFooter from "../../components/footer.vue";
-	import unLogin from "../../components/un-login.vue";
+	import mtFooter from "@/components/footer.vue";
+
 	export default {
 		components: {
-			mtFooter,
-			unLogin
+			mtFooter
 		},
 		data: function() {
 			return {
-				pageLoad:false,
+				pageLoad: false,
 				list: [],
 				t_userid: 0,
 				isFirst: true,
 				per_page: 0,
 				unLogin: true,
-				timer:0,
-				pageCacheKey:"page-pm-index"
+				timer: 0,
+				pageCacheKey: "page-pm-index"
 			}
 		},
 		onLoad: function(ops) {
 			this.t_userid = ops.userid;
-			 
+
 			this.getPage();
 		},
 		onShow: function() {
@@ -82,10 +79,10 @@
 		onReachBottom: function() {
 			this.getList();
 		},
-		 
+
 		methods: {
-			 
-			 
+
+
 			goPm: function(userid) {
 				uni.navigateTo({
 					url: "detail?userid=" + userid
@@ -94,21 +91,21 @@
 			getPage: function() {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/pm/index",
+					url: that.app.apiHost + "/index/pm/index",
 					unLogin: true,
 					success: function(res) {
 						if (res.error == 1000) {
-							that.unLogin = true;
+							that.app.showLoginBox(true)
+							return false;
+						} else {
 							 
-						}else{
-							that.unLogin = false;
 							that.list = res.data.msglist;
 							uni.pageScrollTo({
-								scrollTop:10000
+								scrollTop: 10000
 							})
 						}
-						
-						that.pageLoad=true;
+
+						that.pageLoad = true;
 					}
 				})
 			},
@@ -118,7 +115,7 @@
 					return false;
 				}
 				that.app.get({
-					url: that.app.apiHost + "/pm/index",
+					url: that.app.apiHost + "/index/pm/index",
 					data: {
 						per_page: that.per_page
 					},
@@ -133,7 +130,7 @@
 							that.list = res.data.msglist;
 						}
 						uni.pageScrollTo({
-							scrollTop:10000
+							scrollTop: 10000
 						})
 
 					}

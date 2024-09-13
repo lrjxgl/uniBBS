@@ -35,7 +35,8 @@
 </template>
 
 <script>
-	const district=require("../common/district.js");
+	 
+	import district from  "../common/district.js";
 	export default {
 		name:"picker-region",
 		props: {

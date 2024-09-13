@@ -1,7 +1,7 @@
 <template>
 	<view v-if="pageLoad">
 		<div v-if="list.length==0" class="emptyData">暂无发帖</div>
-		<view class="sglist" v-else>
+		<view class="" v-else>
 			<view  class="sglist-item" v-for="(item,fkey) in  list" :key="fkey">
 			 
 				<div @click="goForum(item.id)" class="flex mgb-5">
@@ -74,8 +74,21 @@
 			getPage:function() {
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/forum/index?a=my",
+					url:that.app.apiHost + "/mm/forum/index?a=my",
+					unLogin:true,  
 					success:function(res){
+						if(res.error){
+							if(res.error==1000){
+								that.app.showLoginBox(true)
+								return false;
+							}
+							uni.showToast({
+								title:res.message,
+								icon:"none"
+							})
+							return false;
+						}
+						
 						that.pageLoad=true;
 						that.list=res.data.list;
 						that.per_page=res.data.per_page;
@@ -88,11 +101,20 @@
 					return false;
 				}
 				that.app.get({
-					url:that.app.apiHost+"/forum/index?a=my",
+					url:that.app.apiHost + "/mm/forum/index?a=my",
 					data:{
 						per_page:that.per_page
 					},
-					success:function(res){						 
+					unLogin:true,  
+					success:function(res){	
+						if(res.error){
+							
+							uni.showToast({
+								title:res.message,
+								icon:"none"
+							})
+							return false;
+						}
 						that.per_page=res.data.per_page;
 						if(that.isFirst){
 							that.list=res.data.list;
@@ -128,7 +150,7 @@
 					success: function (res) {
 						if (res.confirm) {
 							that.app.get({
-								url:that.app.apiHost+"/forum/delete?id="+id,
+								url:that.app.apiHost + "/mm/forum/delete?id="+id,
 								success:function(res){
 									uni.showToast({
 										title:res.message

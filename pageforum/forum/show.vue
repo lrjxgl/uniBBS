@@ -2,45 +2,45 @@
 	<view v-if="pageLoad">
 		 
 		<view class="main-body pd-5 bg-fff">
-			<d-userbox :user="pageData.author"></d-userbox>
-			<view class="d-title">{{pageData.data.title}}</view>
-			<view class="d-tools">
-				<view class="mgr-10 cl2">作者：{{pageData.author.nickname}}</view>
-				<view class="cl2">{{pageData.data.timeago}}</view>
-			</view>
+			<d-userbox :user="author"></d-userbox>
+			<view class="d-title">{{data.title}}</view>
+			
 			<view class="row-box">
-				<div v-if="pageData.data.videourl!=''" class="flex flex-center mgb-5">
-					<video :src="pageData.data.videourl" ></video>
+				<div v-if="data.videourl!=''" class="flex flex-center mgb-5">
+					<video :src="data.videourl" ></video>
 				</div>
 				<div class="flex-col flex-center mgb-5">
-					<image style="width: 100%;" @longpress="downImg(item)" class="wmax mgb-5" mode="widthFix" v-for="(item,key) in pageData.imgslist" :key="key" :src="item"></image> 
+					<image style="width: 100%;" @longpress="downImg(item)" class="wmax mgb-5" mode="widthFix" v-for="(item,key) in imgsList" :key="key" :src="item"></image> 
 				</div>
 				
 			</view>
-			<rich-text class="d-content" :nodes="pageData.data.content">
+			<rich-text class="d-content mgb-5" :nodes="data.content">
 				 
 			</rich-text>
-
+			<view class="flex mgb-10">
+				<div class="flex-1"></div> 
+				<view class="cl2 f12">{{data.timeago}}</view>
+			</view>
 			<view class="flex flex-center mgb-10">
-				<view class="btn-love  mgr-10" @click="loveToggle(pageData.data.id)" v-bind:class="pageData.islove?'btn-love-active':''">
+				<view class="btn-love  mgr-10" @click="loveToggle(data.id)" v-bind:class="islove?'btn-love-active':''">
 					喜欢
 				</view>
 				 
-				<view class="btn-fav mgr-10" @click="favToggle(pageData.data.id)" v-bind:class="pageData.isfav?'btn-fav-active':''">收藏</view>
+				<view class="btn-fav mgr-10" @click="favToggle(data.id)" v-bind:class="isfav?'btn-fav-active':''">收藏</view>
 
 			</view>
 		</view>
 		<view class="comment-hd">跟帖列表</view>
 		<!--评论-->
 		
-		<cmform tablename="mod_forum" :objectid="pageData.data.id"></cmform>
-		<navigator :url="'../forum/add?gid='+pageData.data.gid+'&catid='+pageData.data.catid" class="fixedAdd">发布</navigator>
-	</view>
+		<cmform tablename="mod_forum" :objectid="data.id"></cmform>
+		<navigator :url="'../forum/add?gid='+data.gid+'&catid='+data.catid" class="fixedAdd2"></navigator>
+	</view> 
 </template>
 
 <script>
-	import dUserbox from "../d-userbox.vue";
-	import cmform from "../../components/cmform.vue";
+	import dUserbox from "@/components/forum/d-userbox.vue";
+	import cmform from "@/components/cmform.vue";
 	var id;
 	export default {
 		components: {
@@ -51,7 +51,11 @@
 			return {
 				pageLoad:false, 
 				pageHide:false,
-				pageData:{},
+				data:{},
+				author:{},
+				isfav:0,
+				islove:0,
+				imgsList:[]
 			}
 			
 		},
@@ -86,7 +90,7 @@
 			},
 			addClick:function(){
 				this.app.get({
-					url: this.app.apiHost + "/forum/addclick?id=" + id,
+					url: this.app.apiHost + "/mm/forum/addclick?id=" + id,
 					success: function (res) {
 					}
 				})
@@ -111,12 +115,22 @@
 			getPage: function () {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/forum/show?id=" + id,
+					url: that.app.apiHost + "/mm/forum/show?id=" + id,
 					 
 					success: function (res) {
-						
+						if(res.error){
+							uni.showToast({
+								title:res.message,
+								icon:"none"
+							})
+							return false;
+						}
 						that.pageLoad = true;
-						that.pageData = res.data;
+						that.data = res.data.data;
+						that.imgsList=res.data.imgslist;
+						that.author=res.data.author;
+						that.isfav=res.data.isfav;
+						that.islove=res.data.islove;
 						uni.setNavigationBarTitle({
 							title:res.data.data.title
 						})
@@ -126,16 +140,21 @@
 			favToggle:function(id){
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/fav/toggle",
+					url:that.app.apiHost+"/index/fav/toggle",
 					data:{
 						objectid:id,
 						tablename:"mod_forum"  
 					},
+					unLogin:true,
 					success:function(res){
+						if(res.error==1000){
+							that.app.showLoginBox(false);
+							return false;
+						}
 						if(res.data=='delete'){
-							that.pageData.isfav=false;
+							that.isfav=false;
 						}else{
-							that.pageData.isfav=true;
+							that.isfav=true;
 						}
 						 
 					}
@@ -144,20 +163,21 @@
 			loveToggle:function(id){
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/love/toggle",
+					url:that.app.apiHost+"/index/love/toggle",
 					data:{
 						objectid:id,
 						tablename:"mod_forum"
 					},
+					unLogin:true,
 					success:function(res){
 						if(res.error==1000){
-							that.app.goLogin();
+							that.app.showLoginBox(false);
 							return false;
 						}
 						if(res.data=='delete'){
-							that.pageData.islove=false;
+							that.islove=false;
 						}else{
-							that.pageData.islove=true;
+							that.islove=true;
 						}
 						
 					}

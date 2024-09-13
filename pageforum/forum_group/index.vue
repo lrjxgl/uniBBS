@@ -33,7 +33,7 @@
  
 
 <script>
-	import mtFooter from "../forumfooter.vue";
+	import mtFooter from "/components/forum/footer.vue";
 	export default {
 		components: {
 			mtFooter
@@ -78,7 +78,7 @@
 			getPage: function () {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/forum_group/index?ajax=1",
+					url: that.app.apiHost + "/mm/forum_group/index?ajax=1",
 					success: function (res) {
 						that.pageLoad = true;
 						that.pageData = res.data;

@@ -24,7 +24,7 @@
 	import pageNotice from "../../pages/allmsg/page-notice.vue";
 	import pagePm from "../../pages/allmsg/page-pm.vue";
 	import pageSysmsg from "../../pages/allmsg/page-sysmsg.vue";
-	import mtFooter from "../../pageforum/forumfooter.vue";
+	import mtFooter from "@/components/forum/footer.vue";
 	export default{
 		components:{
 			pageNotice,

@@ -75,8 +75,15 @@
 			getPage:function(){
 				var that=this;
 				that.app.get({
-					url:that.app.apiHost+"/user_address/my?ajax=1",
+					url:that.app.apiHost+"/index/user_address/my",
+					unLogin:true,
 					success:function(res){
+						if(res.error){
+							if(res.error==1000){
+								that.app.showLoginBox(true);
+							}
+							return false;
+						}
 						that.pageLoad=true;
 						that.rscount=res.data.rscount;
 						that.list=res.data.list;
@@ -91,7 +98,7 @@
 					return false;
 				}
 				that.app.get({
-					url:that.app.apiHost+"/user_address/my?",
+					url:that.app.apiHost+"/index/user_address/my",
 					data:{
 						per_page:that.per_page
 					},
@@ -139,7 +146,7 @@
 					}
 				})
 				that.app.get({
-					url:that.app.apiHost+"/user_address/delete?id="+id,
+					url:that.app.apiHost+"/index/user_address/delete?id="+id,
 					success:function(res){
 						if(!res.data.error){
 								var list=that.list;

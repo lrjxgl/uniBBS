@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view v-if="pageLoad">
-			<view class="main-body">
+			<view  v-if="!unLogin">
 				<form  @submit="formSubmit"  >
 					<view class="none">
 						<input type="text" name="gid" :value="gid" />
@@ -20,13 +20,21 @@
 						<view class="input-flex-label flex-1">内容</view>
 						<textarea name="content" class="h100 textarea-flex-text"></textarea>
 					</view>
+					<!--<div>
+						<upimg-box @call-parent="callImgsData" name="imgsdata"></upimg-box>
+					</div>
+					-->
+					<!-- #ifdef H5 -->
+					
+					
 					<div class="tabs-border">
 						<div :class="tab==''?'tabs-border-active':''" @click="tab=''" class="tabs-border-item">图片</div>
 						<div @click="tab='video'"  :class="tab=='video'?'tabs-border-active':''"   class="tabs-border-item">视频</div>
 					</div>
+					<!-- #endif --> 
 					<div :class="tab=='video'?'none':''">
 						<input maxlength="-1" type="text" class="none" name="imgsdata" :value="imgsData" />
-						<upimg-box @call-parent="callImgsData" name="imgsdata"></upimg-box>
+						<upimg-box md="forum" @call-parent="callImgsData" name="imgsdata"></upimg-box>
 					</div>
 					<div  :class="tab==''?'none':''">
 						<input  maxlength="-1" type="text" class="none" name="videourl" :value="mp4url" />
@@ -87,7 +95,7 @@
 		onShow:function(){
 			
 			if(this.pageLoad && this.unLogin){
-				console.log("unlogin") 
+				
 				this.getPage();
 			}
 			
@@ -107,7 +115,7 @@
 			getPage: function () {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/forum/index?a=add",
+					url: that.app.apiHost + "/mm/forum/index?a=add",
 					data:{
 						catid:this.catid,
 						gid:this.gid
@@ -116,8 +124,14 @@
 					success: function (res) {
 						if(res.error==1000){
 							that.unLogin=true;
-							that.pageLoad = true;
-							that.app.goLogin();
+							that.app.showLoginBox(true)
+							return false;
+						}
+						if(res.error){
+							uni.showToast({
+								title:res.message,
+								icon:"none"
+							});
 							return false;
 						}
 						that.unLogin=false;
@@ -131,7 +145,7 @@
 			formSubmit:function(e){
 				var that=this;
 				that.app.post({
-					url:that.app.apiHost+"/forum/save?ajax=1",
+					url:that.app.apiHost+"/mm/forum/save?ajax=1",
 					data:e.detail.value,
 					
 					success:function(res){

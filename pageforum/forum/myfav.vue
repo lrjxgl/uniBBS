@@ -62,8 +62,21 @@
 			getPage: function() {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/forum_fav/mylist?tablename=" + tablename + "&ajax=1",
+					url: that.app.apiHost + "/mm/forum_fav/mylist?tablename=" + tablename + "&ajax=1",
+					unLogin:true,
 					success: function(res) {
+						if(res.error){
+							if(res.error==1000){
+								that.app.showLoginBox(true)
+							}else{
+								uni.showToast({
+									title:res.message,
+									icon:"none"
+								})
+							}
+							return false;
+						}
+						
 						that.pageLoad = true;
 						that.list = res.data.list;
 						that.per_page = res.data.per_page;
@@ -76,7 +89,7 @@
 					return false;
 				}
 				that.app.get({
-					url: that.app.apiHost + "/forum_fav/mylist?tablename=" + tablename + "&ajax=1",
+					url: that.app.apiHost + "/mm/forum_fav/mylist?tablename=" + tablename + "&ajax=1",
 					data: {
 						per_page: that.per_page
 					},

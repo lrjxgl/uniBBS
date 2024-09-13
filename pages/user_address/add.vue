@@ -57,8 +57,15 @@
 			getPage: function() {
 				var that = this;
 				that.app.get({
-					url: that.app.apiHost + "/user_address/add?",
+					url: that.app.apiHost + "/index/user_address/add",
+					unLogin:true,
 					success: function(res) {
+						if(res.error){
+							if(res.error==1000){
+								that.app.showLoginBox(true);
+							}
+							return false;
+						}
 						that.pageLoad = true;
 						that.pageData = res.data;
 
@@ -68,18 +75,19 @@
 			formSubmit: function(e) {
 				var that = this;
 				that.app.post({
-					url: that.app.apiHost + "/user_address/save?",
+					url: that.app.apiHost + "/index/user_address/save",
 					data: e.detail.value,
+					unLogin:true,
 					success: function(res) {
-						uni.showToast({
-							"title": res.message
-						})
-						if (!res.error) {
-							setTimeout(function() {
-								uni.navigateBack()
-							}, 600)
-
+						if(res.error){
+							if(res.error==1000){
+								that.app.showLoginBox(true);
+							}
+							return false;
 						}
+						setTimeout(function() {
+							uni.navigateBack()
+						}, 600)
 
 					}
 				})

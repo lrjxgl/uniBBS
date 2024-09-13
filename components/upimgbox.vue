@@ -21,15 +21,18 @@
 		props:{
 			defaultImgsList:{}, 
 			defaultImgsData:{},
+			md:""
 		},
 		data:function(){
 			return {
 				imgsData:this.defaultImgsData,
-				imgsList:this.defaultImgsList,
+				imgsList:this.defaultImgsList
+				 
 			}
 		},
 		created:function(){
-			console.log(this.defaultImgsList)
+			console.log(this.md)
+			 
 		},
 		
 		 
@@ -43,10 +46,13 @@
 						const len=tempFilePaths.length;
 						for(var i=0;i<len;i++){
 							uni.uploadFile({
-								url: that.app.apiHost+'/upload/img?loginToken='+that.app.getToken(),  
+								url: that.app.apiHost+'/index.php?m=upload&a=img&ajax=1&loginToken='+that.app.getToken(),  
 								filePath: tempFilePaths[i],
 								name: 'upimg',
 								dataType:"json",
+								formData:{
+									'md':that.md
+								},
 								success: function (res) {
 									
 									if(!res.data.error){
